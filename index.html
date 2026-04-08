@@ -1253,13 +1253,236 @@ function go(id){
   document.getElementById('svcNext').onclick=function(){goTo(cur+1);};
 })();
 
-// ── PORTAL ───────────────────────────────────────────────────
-function portalSignIn(){
-  go('portal-dash');
-  pxScreen('overview','Overview','Your Media Library');
-}
-function portalSignOut(){go('portal-login');}
+// ── SUPABASE CONFIG ───────────────────────────────────────────
+var SUPA_URL = 'https://rdjhwrdxsixlgofxpchk.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkamh3cmR4c2l4bGdvZnhwY2hrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MTE3MjksImV4cCI6MjA5MTE4NzcyOX0.fnLGpG9iJhWUZ0piyYBSwEu2rTPtMZa3BaRlWmAkl2A';
+var supaHeaders = {'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json'};
+var currentSession = null;
+var currentAgent = null;
+var currentListings = [];
+var currentListing = null;
 
+// ── SUPABASE HELPERS ─────────────────────────────────────────
+async function supaFetch(path, opts) {
+  var res = await fetch(SUPA_URL + path, Object.assign({headers: supaHeaders}, opts||{}));
+  return res.json();
+}
+
+async function supaAuth(email, password) {
+  var res = await fetch(SUPA_URL + '/auth/v1/token?grant_type=password', {
+    method: 'POST',
+    headers: {'apikey': SUPA_KEY, 'Content-Type': 'application/json'},
+    body: JSON.stringify({email, password})
+  });
+  return res.json();
+}
+
+async function supaSignOut(token) {
+  await fetch(SUPA_URL + '/auth/v1/logout', {
+    method: 'POST',
+    headers: {'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + token}
+  });
+}
+
+// ── PORTAL LOGIN ─────────────────────────────────────────────
+async function portalSignIn() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPw').value.trim();
+  var btn = document.querySelector('.px-signin-btn');
+
+  if (!email || !password) { pxLoginError('Please enter your email and password.'); return; }
+
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+
+  try {
+    var data = await supaAuth(email, password);
+
+    if (data.error || !data.access_token) {
+      btn.textContent = 'Sign In →';
+      btn.disabled = false;
+      pxLoginError(data.error_description || 'Invalid email or password.');
+      return;
+    }
+
+    currentSession = data;
+    supaHeaders['Authorization'] = 'Bearer ' + data.access_token;
+
+    // Load agent profile
+    var agents = await supaFetch('/rest/v1/agents?id=eq.' + data.user.id + '&select=*');
+    currentAgent = agents[0] || {name: email.split('@')[0], email: email, brokerage: ''};
+
+    // Load listings
+    var listings = await supaFetch('/rest/v1/listings?agent_id=eq.' + data.user.id + '&select=*&order=delivered_at.desc');
+    currentListings = listings || [];
+
+    go('portal-dash');
+    pxRenderDashboard();
+    pxScreen('overview', 'Overview', 'Your Media Library');
+
+    btn.textContent = 'Sign In →';
+    btn.disabled = false;
+
+  } catch(e) {
+    btn.textContent = 'Sign In →';
+    btn.disabled = false;
+    pxLoginError('Something went wrong. Please try again.');
+  }
+}
+
+function pxLoginError(msg) {
+  var err = document.getElementById('pxLoginErr');
+  if (!err) {
+    err = document.createElement('p');
+    err.id = 'pxLoginErr';
+    err.style.cssText = 'color:rgba(255,100,100,0.8);font-size:0.78rem;margin-top:12px;text-align:center;';
+    document.querySelector('.px-signin-btn').after(err);
+  }
+  err.textContent = msg;
+}
+
+async function portalSignOut() {
+  if (currentSession) await supaSignOut(currentSession.access_token);
+  currentSession = null;
+  currentAgent = null;
+  currentListings = [];
+  supaHeaders['Authorization'] = 'Bearer ' + SUPA_KEY;
+  go('portal-login');
+}
+
+// ── RENDER DASHBOARD ─────────────────────────────────────────
+function pxRenderDashboard() {
+  if (!currentAgent) return;
+
+  // Update avatar and name
+  var initials = (currentAgent.name||'').split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2) || '??';
+  var avatar = document.querySelector('.px-avatar');
+  if (avatar) avatar.textContent = initials;
+  var nameEl = document.querySelector('.px-agent-name');
+  if (nameEl) nameEl.textContent = currentAgent.name || currentAgent.email;
+  var roleEl = document.querySelector('.px-agent-role');
+  if (roleEl) roleEl.textContent = currentAgent.brokerage || 'Agent';
+
+  // Update stats
+  var active = currentListings.filter(function(l){return l.status==='active';}).length;
+  var sold = currentListings.filter(function(l){return l.status==='sold';}).length;
+  var statEls = document.querySelectorAll('.px-stat-num');
+  if (statEls[0]) statEls[0].textContent = currentListings.length;
+  if (statEls[3]) statEls[3].textContent = active;
+
+  // Render listing table (overview + listings screen)
+  var tableHTML = pxBuildListingRows();
+  var overviewTable = document.querySelector('#px-overview tbody');
+  var listingsTable = document.querySelector('#px-listings tbody');
+  if (overviewTable) overviewTable.innerHTML = tableHTML || pxEmptyRow('No listings yet. Your media will appear here after your first shoot.');
+  if (listingsTable) listingsTable.innerHTML = tableHTML || pxEmptyRow('No listings yet.');
+
+  // Update badge
+  var badge = document.querySelector('#nav-listings .px-nav-badge');
+  if (badge) badge.textContent = currentListings.length;
+}
+
+function pxBuildListingRows() {
+  if (!currentListings.length) return '';
+  return currentListings.map(function(l) {
+    var date = l.delivered_at ? new Date(l.delivered_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Pending';
+    var statusClass = l.status === 'active' ? 'px-status-active' : 'px-status-sold';
+    var statusLabel = l.status === 'active' ? 'Active' : 'Sold';
+    return '<tr onclick="pxOpenListing(\'' + l.id + '\')" style="cursor:pointer;">' +
+      '<td><div class="px-listing-addr">' + l.address + '</div><div class="px-listing-pkg">' + l.package + '</div></td>' +
+      '<td><div class="px-listing-date">' + date + '</div></td>' +
+      '<td><div class="px-listing-assets"><span class="px-asset-tag">Loading…</span></div></td>' +
+      '<td><span class="px-status-tag ' + statusClass + '">' + statusLabel + '</span></td>' +
+      '<td class="px-table-arrow">›</td>' +
+      '</tr>';
+  }).join('');
+}
+
+function pxEmptyRow(msg) {
+  return '<tr><td colspan="5" style="text-align:center;padding:32px;color:rgba(255,255,255,0.25);font-size:0.82rem;">' + msg + '</td></tr>';
+}
+
+// ── OPEN LISTING DETAIL ───────────────────────────────────────
+async function pxOpenListing(listingId) {
+  var listing = currentListings.find(function(l){return l.id===listingId;}) || currentListings[0];
+  if (!listing) return;
+  currentListing = listing;
+
+  var date = listing.delivered_at ? new Date(listing.delivered_at).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) : 'Pending delivery';
+  var statusLabel = listing.status === 'active' ? 'Active' : 'Sold';
+
+  document.querySelector('.px-detail-addr').textContent = listing.address;
+  document.querySelector('.px-detail-meta').textContent = listing.package + ' · Delivered ' + date + ' · ' + statusLabel;
+
+  // Load assets for this listing
+  var assets = await supaFetch('/rest/v1/assets?listing_id=eq.' + listing.id + '&select=*');
+  pxRenderAssets(assets || []);
+
+  pxScreen('listing-detail', listing.address, listing.package + ' · ' + statusLabel);
+}
+
+function pxRenderAssets(assets) {
+  var photos  = assets.filter(function(a){return a.type==='photos';});
+  var videos  = assets.filter(function(a){return a.type==='video';});
+  var reels   = assets.filter(function(a){return a.type==='reel';});
+  var raw     = assets.filter(function(a){return a.type==='raw';});
+  var floor   = assets.filter(function(a){return a.type==='floorplan';});
+  var tour    = assets.filter(function(a){return a.type==='3dtour';});
+
+  // Photos tab
+  var photosPane = document.getElementById('dl-photos');
+  if (photosPane) {
+    if (photos.length) {
+      photosPane.innerHTML = photos.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">📁</div>' +
+          '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
+          '<div class="px-media-desc">' + (a.description||'Full Resolution · Google Drive') + '</div></div>' +
+          '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download All</a></div>';
+      }).join('');
+    } else {
+      photosPane.innerHTML = pxAssetPending('Photos haven\'t been uploaded yet. Check back after your shoot.');
+    }
+  }
+
+  // Videos tab
+  var videosPane = document.getElementById('dl-videos');
+  if (videosPane) {
+    var allVideos = videos.concat(reels).concat(floor).concat(tour);
+    if (allVideos.length) {
+      var icons = {video:'🎬', reel:'📱', floorplan:'📐', '3dtour':'🏠'};
+      videosPane.innerHTML = allVideos.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">' + (icons[a.type]||'🎬') + '</div>' +
+          '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
+          '<div class="px-media-desc">' + (a.description||'Vimeo · Full Quality') + '</div></div>' +
+          '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download</a></div>';
+      }).join('');
+    } else {
+      videosPane.innerHTML = pxAssetPending('Videos are being edited. Usually ready within 48–72 hours of your shoot.');
+    }
+  }
+
+  // Raw tab
+  var rawPane = document.getElementById('dl-raw');
+  if (rawPane) {
+    if (raw.length) {
+      rawPane.innerHTML = raw.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">📂</div>' +
+          '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
+          '<div class="px-media-desc">' + (a.description||'Raw footage · Google Drive') + '</div></div>' +
+          '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download All</a></div>';
+      }).join('');
+    } else {
+      rawPane.innerHTML = pxAssetPending('Raw footage will be available here if included in your package.');
+    }
+  }
+}
+
+function pxAssetPending(msg) {
+  return '<div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;">' +
+    '<div style="font-size:0.82rem;color:rgba(255,255,255,0.25);line-height:1.7;">' + msg + '</div></div>';
+}
+
+// ── SCREEN + TAB NAVIGATION ──────────────────────────────────
 function pxScreen(id,title,sub){
   document.querySelectorAll('.px-screen').forEach(function(s){s.classList.remove('active');});
   document.querySelectorAll('.px-nav-item').forEach(function(n){n.classList.remove('active');});
@@ -1271,16 +1494,23 @@ function pxScreen(id,title,sub){
   document.getElementById('pxSub').textContent=sub||'';
 }
 
-function pxOpenListing(){
-  pxScreen('listing-detail','142 Maple Ridge Dr.','Full Bundle · Delivered March 18, 2026');
-}
-
 function pxTab(id,el){
   document.querySelectorAll('.px-tab-pane').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.px-tab').forEach(function(t){t.classList.remove('active');});
   var pane=document.getElementById(id);
   if(pane)pane.classList.add('active');
   if(el)el.classList.add('active');
+}
+
+// ── BOOKING FORM → SUPABASE ───────────────────────────────────
+async function submitBookingToSupabase(data) {
+  try {
+    await fetch(SUPA_URL + '/rest/v1/bookings', {
+      method: 'POST',
+      headers: Object.assign({}, supaHeaders, {'Prefer': 'return=minimal'}),
+      body: JSON.stringify(data)
+    });
+  } catch(e) { console.log('Booking submit error', e); }
 }
 
 function showScreen(id){
