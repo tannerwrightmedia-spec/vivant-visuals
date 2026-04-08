@@ -72,11 +72,11 @@ body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);}
 .svc-outer{overflow:hidden;}
 .svc-track{display:flex;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);}
 .svc-slide{min-width:100%;display:flex;justify-content:center;padding:0 6vw;}
-.svc-card{background:var(--black3);border:1px solid var(--border);border-radius:12px;max-width:780px;width:100%;text-align:center;position:relative;overflow:hidden;background-size:cover;background-position:center;}
-.svc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.25) 0%,rgba(0,0,0,0.7) 60%,rgba(0,0,0,0.92) 100%);z-index:1;}
-.svc-card-inner{position:relative;z-index:2;padding:160px 48px 52px;}
-.svc-icon{font-size:2.4rem;margin-bottom:20px;}
-.svc-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:16px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,0.5);}
+.svc-card{background:var(--black3);border:none;border-radius:14px;max-width:780px;width:100%;text-align:center;position:relative;overflow:hidden;background-size:cover;background-position:center;}
+.svc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.55) 50%,rgba(0,0,0,0.9) 100%);z-index:1;}
+.svc-card-inner{position:relative;z-index:2;padding:52px 48px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;}
+.svc-icon{display:none;}
+.svc-title{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--white);margin-bottom:16px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,0.5);}
 .svc-desc{color:rgba(255,255,255,0.85);font-size:1rem;line-height:1.85;font-weight:300;margin-bottom:24px;text-shadow:0 1px 6px rgba(0,0,0,0.4);}
 .svc-stat{font-size:0.8rem;color:rgba(255,255,255,0.35);border-top:1px solid rgba(255,255,255,0.12);padding-top:20px;line-height:1.6;}
 .svc-stat strong{color:rgba(255,255,255,0.65);}
@@ -306,7 +306,7 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
   .lev-card:last-child{border-radius:0 0 8px 8px;}
   .svc-nav-grid{grid-template-columns:1fr;}
   .svc-nav-card.full{grid-column:auto;}
-  .svc-card-inner{padding:120px 24px 36px;}
+  .svc-card-inner{padding:40px 24px;min-height:340px;}
   .port-grid{grid-template-columns:1fr!important;grid-auto-rows:200px;}
   .port-item.large{grid-column:auto;}
   .cta-box{padding:36px 20px;}
