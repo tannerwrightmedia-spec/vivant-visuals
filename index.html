@@ -2274,7 +2274,7 @@ async function loadSiteContent() {
       var heroSub = document.getElementById('heroSub');
       var heroDesc = document.getElementById('heroDesc');
       var heroCta = document.getElementById('heroCta');
-      if (heroTitle && hc.title) heroTitle.textContent = hc.title;
+      if (heroTitle && hc.title) heroTitle.innerHTML = hc.title.replace(/Media\./g, '<span style="color:rgba(255,255,255,0.3);">Media.</span>').replace(/\n/g, '<br>');
       if (heroSub && hc.subtitle) heroSub.textContent = hc.subtitle;
       if (heroDesc && hc.description) heroDesc.textContent = hc.description;
       if (heroCta && hc.cta_text) heroCta.textContent = hc.cta_text;
