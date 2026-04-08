@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vivant Visuals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--black:#0a0a0a;--black2:#111;--black3:#1a1a1a;--white:#fff;--gray:#888;--lgray:#ccc;--border:rgba(255,255,255,0.07);}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);}
+
+/* ── PAGES ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── NAV ── */
+#mainNav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:18px 6vw;background:rgba(10,10,10,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(10px);}
+.logo{font-family:'Playfair Display',serif;color:var(--white);font-size:1.1rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{color:rgba(255,255,255,0.5);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:color 0.2s;text-decoration:none;}
+.nav-links a:hover,.nav-links a.active{color:var(--white);}
+.nav-cta{background:var(--white)!important;color:var(--black)!important;padding:9px 22px;border-radius:3px;font-weight:700!important;}
+.nav-cta:hover{background:var(--lgray)!important;}
+.nav-drop{position:relative;display:flex;align-items:center;}
+.nav-drop>a{color:rgba(255,255,255,0.5);font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:color 0.2s;}
+.nav-drop:hover>a{color:var(--white);}
+.drop-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%);background:var(--black2);border:1px solid var(--border);border-radius:8px;padding:8px 0;min-width:180px;opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:600;}
+.drop-menu::before{content:'';position:absolute;top:-12px;left:0;right:0;height:12px;background:transparent;}
+.nav-drop:hover .drop-menu{opacity:1;pointer-events:all;}
+.drop-menu a{display:block;padding:10px 20px;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);cursor:pointer;transition:color 0.2s,background 0.2s;text-decoration:none;}
+.drop-menu a:hover{color:var(--white);background:rgba(255,255,255,0.04);}
+
+/* ── SHARED ── */
+.pt{padding-top:57px;}
+.btn{display:inline-block;background:var(--white);color:var(--black);padding:15px 38px;border-radius:4px;font-weight:700;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border:none;transition:background 0.2s,transform 0.15s;text-decoration:none;}
+.btn:hover{background:var(--lgray);transform:translateY(-2px);}
+.btn-out{display:inline-block;border:1px solid rgba(255,255,255,0.25);color:var(--white);padding:15px 38px;border-radius:4px;font-weight:500;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;background:transparent;transition:border-color 0.2s,transform 0.15s;text-decoration:none;}
+.btn-out:hover{border-color:var(--white);transform:translateY(-2px);}
+.slabel{font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gray);font-weight:500;margin-bottom:16px;}
+.stitle{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);color:var(--white);line-height:1.2;margin-bottom:10px;}
+.ssub{color:var(--gray);font-size:1rem;line-height:1.85;max-width:600px;margin:0 auto 60px;font-weight:300;}
+.hero-wrap{min-height:50vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 6vw;}
+.hero-wrap h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);line-height:1.1;}
+.cta-box{border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:64px 48px;max-width:680px;margin:40px auto 0;background:var(--black2);text-align:center;}
+.cta-box h3{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--white);margin-bottom:16px;}
+.cta-box p{color:var(--gray);margin-bottom:36px;line-height:1.8;font-size:0.95rem;font-weight:300;}
+.cta-note{color:rgba(255,255,255,0.2);font-size:0.78rem;margin-top:16px;letter-spacing:0.06em;}
+
+/* ── MARQUEE ── */
+.mq-wrap{overflow:hidden;white-space:nowrap;background:var(--black2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 0;}
+.mq-track{display:inline-flex;animation:mq 35s linear infinite;}
+@keyframes mq{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.mq-item{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0 28px;}
+.mq-dot{color:rgba(255,255,255,0.12);}
+
+/* ── STATS ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px;max-width:1000px;margin:0 auto;}
+.stat-block{background:var(--black2);border:1px solid var(--border);padding:36px 24px;text-align:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.6rem;color:var(--white);font-weight:700;line-height:1;margin-bottom:10px;}
+.stat-label{font-size:0.75rem;color:var(--gray);line-height:1.5;font-weight:300;}
+
+/* ── WHAT WE DO ── */
+.wwd-card{background:var(--black3);border:1px solid var(--border);padding:18px 20px;display:flex;align-items:flex-start;gap:16px;transition:background 0.2s;}
+.wwd-card:hover{background:#222;}
+.wwd-num{font-family:'Playfair Display',serif;font-size:1.1rem;color:rgba(255,255,255,0.12);font-weight:700;flex-shrink:0;width:28px;}
+.wwd-title{font-size:0.9rem;color:var(--white);margin-bottom:4px;font-weight:500;}
+.wwd-desc{font-size:0.78rem;color:var(--gray);line-height:1.6;font-weight:300;}
+
+/* ── SERVICES CAROUSEL ── */
+.svc-outer{overflow:hidden;}
+.svc-track{display:flex;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);}
+.svc-slide{min-width:100%;display:flex;justify-content:center;padding:0 6vw;}
+.svc-card{background:var(--black3);border:1px solid var(--border);border-radius:12px;padding:52px 48px;max-width:680px;width:100%;text-align:center;}
+.svc-icon{font-size:2.4rem;margin-bottom:20px;}
+.svc-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:16px;font-weight:700;}
+.svc-desc{color:var(--gray);font-size:1rem;line-height:1.85;font-weight:300;margin-bottom:24px;}
+.svc-stat{font-size:0.8rem;color:rgba(255,255,255,0.25);border-top:1px solid var(--border);padding-top:20px;line-height:1.6;}
+.svc-stat strong{color:rgba(255,255,255,0.55);}
+.car-ctrl{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:32px;}
+.car-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);background:transparent;color:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:border-color 0.2s,background 0.2s;}
+.car-btn:hover{border-color:var(--white);background:rgba(255,255,255,0.05);}
+.dots{display:flex;gap:8px;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:background 0.2s,transform 0.2s;}
+.dot.active{background:var(--white);transform:scale(1.3);}
+
+/* ── LEVERAGE ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-width:920px;margin:0 auto;}
+.lev-card{background:var(--black2);padding:48px 40px;border:1px solid var(--border);transition:background 0.2s;}
+.lev-card:hover{background:var(--black3);}
+.lev-card:first-child{border-radius:8px 0 0 8px;}
+.lev-card:last-child{border-radius:0 8px 8px 0;}
+.lev-num{font-family:'Playfair Display',serif;font-size:3rem;color:rgba(255,255,255,0.05);font-weight:800;margin-bottom:16px;line-height:1;}
+.lev-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--white);margin-bottom:14px;}
+
+/* ── SERVICES GRID ── */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;max-width:1100px;margin:0 auto;}
+.svc-item{background:var(--black3);border:1px solid var(--border);padding:40px 32px;transition:background 0.2s;}
+.svc-item:hover{background:#222;}
+.svc-item-icon{font-size:1.6rem;margin-bottom:16px;}
+.svc-item h4{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);margin-bottom:10px;}
+.svc-item p{color:var(--gray);font-size:0.88rem;line-height:1.7;font-weight:300;}
+
+/* ── SERVICES NAV GRID ── */
+.svc-nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:900px;margin:0 auto;}
+.svc-nav-card{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:48px 36px;cursor:pointer;transition:border-color 0.2s,background 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;}
+.svc-nav-card:hover{border-color:rgba(255,255,255,0.25);background:var(--black3);}
+.svc-nav-card.full{grid-column:1/-1;}
+.svc-nav-icon{font-size:2.4rem;}
+.svc-nav-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--white);}
+.svc-nav-sub{font-size:0.78rem;color:var(--gray);font-weight:300;line-height:1.6;}
+
+/* ── PORTFOLIO ── */
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:240px;gap:3px;}
+.port-item{overflow:hidden;position:relative;}
+.port-item.large{grid-column:span 2;}
+.port-thumb{width:100%;height:100%;background:var(--black3);transition:transform 0.4s;display:flex;align-items:center;justify-content:center;}
+.port-item:hover .port-thumb{transform:scale(1.03);}
+.port-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.port-placeholder{color:rgba(255,255,255,0.08);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;text-align:center;}
+
+/* ── ABOUT ── */
+.about-inner{max-width:780px;margin:0 auto;}
+.about-inner p{color:var(--gray);font-size:1.05rem;line-height:1.9;font-weight:300;margin-bottom:28px;}
+.about-inner p strong{color:var(--white);font-weight:500;}
+.about-inner h3{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:20px;margin-top:48px;}
+
+/* ── BOOK NOW ── */
+
+/* ── PORTAL LOGIN ── */
+.portal-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 6vw;background:var(--black);}
+.portal-card{background:var(--black2);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:60px 48px;width:100%;max-width:440px;text-align:center;}
+.portal-logo{font-family:'Playfair Display',serif;font-size:1.4rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);margin-bottom:8px;}
+.portal-sub{color:var(--gray);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:40px;}
+.portal-badge{display:inline-block;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:4px 14px;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:32px;}
+.form-group{margin-bottom:20px;text-align:left;}
+.form-group label{display:block;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;font-weight:500;}
+.form-group input{width:100%;background:var(--black3);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:14px 16px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+.form-group input:focus{border-color:rgba(255,255,255,0.35);}
+.portal-btn{width:100%;background:var(--white);color:var(--black);padding:15px;border-radius:4px;font-weight:700;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;margin-top:8px;transition:background 0.2s;}
+.portal-btn:hover{background:var(--lgray);}
+.portal-forgot{color:rgba(255,255,255,0.25);font-size:0.78rem;margin-top:20px;cursor:pointer;}
+
+/* ── PORTAL DASH (mobile-first) ── */
+#page-portal-dash .screen{display:none;}
+#page-portal-dash .screen.active{display:flex;flex-direction:column;min-height:100vh;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);background:var(--black2);position:sticky;top:0;z-index:100;}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.back-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.2s;}
+.back-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--white);}
+.topbar-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--white);}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--black3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.6);}
+.notif{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.4);position:relative;}
+.notif-dot{position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--white);}
+.dash-body,.media-body,.analytics-body,.book-body,.listing-body{padding:28px;flex:1;}
+.greeting-row{margin-bottom:28px;}
+.date-lbl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:6px;}
+.greeting-row h1{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--white);font-weight:700;line-height:1.2;}
+.greeting-row h1 span{color:rgba(255,255,255,0.35);}
+.qs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.qs-card{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:20px 16px;}
+.qs-num{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);font-weight:700;line-height:1;}
+.qs-lbl{font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-top:5px;}
+.qs-trend{font-size:0.7rem;color:rgba(255,255,255,0.25);margin-top:3px;}
+.p-slabel{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:14px;}
+.main-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.main-card{background:var(--black2);border:1px solid var(--border);border-radius:12px;padding:24px 20px;cursor:pointer;transition:border-color 0.2s,transform 0.15s,background 0.2s;position:relative;}
+.main-card:hover{border-color:rgba(255,255,255,0.2);transform:translateY(-2px);background:var(--black3);}
+.mc-icon{font-size:1.8rem;margin-bottom:12px;}
+.mc-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--white);margin-bottom:5px;}
+.mc-desc{font-size:0.75rem;color:var(--gray);line-height:1.55;font-weight:300;}
+.mc-arrow{position:absolute;bottom:16px;right:16px;color:rgba(255,255,255,0.2);font-size:1rem;transition:color 0.2s,transform 0.2s;}
+.main-card:hover .mc-arrow{color:rgba(255,255,255,0.6);transform:translate(3px,-3px);}
+.book-card{grid-column:1/-1;}
+.upcoming-card{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;}
+.uc-date{background:var(--black3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center;flex-shrink:0;}
+.uc-month{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);}
+.uc-day{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);line-height:1;font-weight:700;}
+.uc-info{flex:1;}
+.uc-info h4{font-size:0.95rem;color:var(--white);margin-bottom:4px;}
+.uc-info p{font-size:0.78rem;color:var(--gray);font-weight:300;}
+.uc-tag{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:rgba(255,255,255,0.35);}
+.search-row{display:flex;gap:10px;margin-bottom:20px;}
+.search-inp{flex:1;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:11px 16px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.85rem;outline:none;}
+.search-inp::placeholder{color:rgba(255,255,255,0.2);}
+.filt-btn{background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:11px 14px;color:rgba(255,255,255,0.4);font-size:0.78rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.filt-btn.active,.filt-btn:hover{border-color:rgba(255,255,255,0.35);color:var(--white);}
+.list-rows{display:flex;flex-direction:column;gap:10px;}
+.list-row{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;cursor:pointer;transition:border-color 0.2s,background 0.2s;display:flex;align-items:center;gap:14px;}
+.list-row:hover{border-color:rgba(255,255,255,0.18);background:var(--black3);}
+.list-thumb{width:52px;height:42px;background:var(--black3);border-radius:6px;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.list-info{flex:1;}
+.list-info h4{font-size:0.9rem;color:var(--white);margin-bottom:3px;}
+.list-info p{font-size:0.73rem;color:var(--gray);}
+.list-tags{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;}
+.ltag{font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:10px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);}
+.ltag.green{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);}
+.list-arrow{color:rgba(255,255,255,0.15);font-size:1rem;}
+.tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.tab{padding:10px 20px;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;}
+.tab.active{color:var(--white);border-bottom-color:var(--white);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+.files-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+.file-card{background:var(--black2);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color 0.2s;}
+.file-card:hover{border-color:rgba(255,255,255,0.25);}
+.file-thumb{height:100px;background:var(--black3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.file-info{padding:10px 12px;}
+.file-info p{font-size:0.72rem;color:rgba(255,255,255,0.5);line-height:1.4;}
+.file-info span{font-size:0.65rem;color:rgba(255,255,255,0.2);}
+.vid-list{display:flex;flex-direction:column;gap:10px;}
+.vid-item{background:var(--black2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 0.2s;}
+.vid-item:hover{border-color:rgba(255,255,255,0.2);}
+.play-btn{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.6);flex-shrink:0;font-size:0.8rem;}
+.vid-info h5{font-size:0.87rem;color:var(--white);margin-bottom:3px;}
+.vid-info p{font-size:0.72rem;color:var(--gray);}
+.dl-btn{margin-left:auto;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);border:1px solid var(--border);padding:5px 12px;border-radius:4px;cursor:pointer;transition:all 0.2s;}
+.dl-btn:hover{color:var(--white);border-color:rgba(255,255,255,0.3);}
+.an-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.an-card{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:16px 14px;}
+.an-num{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white);font-weight:700;line-height:1;}
+.an-lbl{font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);margin-top:5px;}
+.an-trend{font-size:0.68rem;color:rgba(150,255,150,0.45);margin-top:3px;}
+.plat-btns{display:flex;gap:10px;margin-bottom:20px;}
+.plat-btn{display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--black2);color:rgba(255,255,255,0.4);font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
+.plat-btn.active{border-color:rgba(255,255,255,0.35);color:var(--white);background:var(--black3);}
+.chart-card{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px;}
+.chart-title{font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;}
+.perf-card{background:var(--black2);border:1px solid var(--border);border-radius:8px;padding:14px;cursor:pointer;transition:border-color 0.2s;margin-bottom:10px;}
+.perf-card:hover{border-color:rgba(255,255,255,0.2);}
+.perf-addr{font-size:0.85rem;color:var(--white);}
+.perf-date{font-size:0.72rem;color:var(--gray);margin-bottom:8px;}
+.bar-wrap{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:5px;}
+.bar-fill{height:4px;background:rgba(255,255,255,0.35);border-radius:2px;}
+.perf-num{font-size:0.73rem;color:rgba(255,255,255,0.35);}
+.book-steps{display:flex;gap:0;margin-bottom:28px;}
+.book-step{flex:1;text-align:center;position:relative;}
+.book-step::after{content:'';position:absolute;top:14px;right:0;width:100%;height:1px;background:var(--border);z-index:0;}
+.book-step:last-child::after{display:none;}
+.step-circ{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--black2);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:rgba(255,255,255,0.25);margin:0 auto 6px;position:relative;z-index:1;}
+.step-circ.active{border-color:var(--white);color:var(--white);background:var(--black);}
+.step-circ.done{background:var(--white);color:var(--black);}
+.step-lbl{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);}
+.step-lbl.active{color:var(--white);}
+.book-panel{display:none;}
+.book-panel.active{display:block;}
+.book-panel h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--white);margin-bottom:18px;}
+.pkg-cards{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:24px;}
+.pkg-card{background:var(--black2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;cursor:pointer;transition:border-color 0.2s;display:flex;align-items:center;gap:14px;}
+.pkg-card:hover,.pkg-card.sel{border-color:rgba(255,255,255,0.35);}
+.pkg-radio{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pkg-radio.chk::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--white);}
+.pkg-info h4{font-size:0.9rem;color:var(--white);margin-bottom:3px;}
+.pkg-info p{font-size:0.73rem;color:var(--gray);}
+.date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:18px;}
+.date-cell{aspect-ratio:1;border-radius:6px;border:1px solid var(--border);background:var(--black2);display:flex;align-items:center;justify-content:center;font-size:0.73rem;color:rgba(255,255,255,0.35);cursor:pointer;transition:all 0.2s;}
+.date-cell:hover:not(.dis){border-color:rgba(255,255,255,0.35);color:var(--white);}
+.date-cell.sel{background:var(--white);color:var(--black);border-color:var(--white);}
+.date-cell.dis{opacity:0.2;cursor:default;}
+.date-cell.hdr{background:transparent;border-color:transparent;color:rgba(255,255,255,0.2);font-size:0.63rem;cursor:default;}
+.time-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px;}
+.time-slot{background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;font-size:0.78rem;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;}
+.time-slot:hover:not(.unavail){border-color:rgba(255,255,255,0.3);color:var(--white);}
+.time-slot.sel{background:var(--white);color:var(--black);border-color:var(--white);}
+.time-slot.unavail{opacity:0.2;cursor:default;}
+.form-label{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;display:block;}
+.addr-input{width:100%;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.87rem;outline:none;margin-bottom:20px;}
+.addr-input::placeholder{color:rgba(255,255,255,0.2);}
+.notes-area{width:100%;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.87rem;resize:vertical;min-height:120px;outline:none;margin-bottom:10px;}
+.notes-area::placeholder{color:rgba(255,255,255,0.2);}
+.notes-hint{font-size:0.72rem;color:rgba(255,255,255,0.2);margin-bottom:24px;}
+.confirm-card{background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:18px;}
+.confirm-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
+.confirm-row:last-child{border-bottom:none;}
+.confirm-row span:first-child{font-size:0.73rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gray);}
+.confirm-row span:last-child{font-size:0.83rem;color:var(--white);}
+.success-screen{text-align:center;padding:40px 0;}
+.success-icon{font-size:3rem;margin-bottom:20px;}
+.success-screen h3{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:12px;}
+.success-screen p{color:var(--gray);font-size:0.9rem;line-height:1.7;font-weight:300;}
+.next-btn{width:100%;background:var(--white);color:var(--black);padding:14px;border-radius:4px;font-weight:700;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s;}
+.next-btn:hover{background:var(--lgray);}
+.signout-row{padding:20px 0;text-align:center;}
+.signout-btn{background:transparent;border:1px solid var(--border);color:rgba(255,255,255,0.3);padding:10px 24px;border-radius:4px;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.signout-btn:hover{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.6);}
+
+/* ── FOOTER ── */
+footer{background:var(--black2);border-top:1px solid var(--border);padding:28px 6vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
+.foot-links{display:flex;gap:24px;}
+.foot-links span{color:rgba(255,255,255,0.25);font-size:0.75rem;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s;}
+.foot-links span:hover{color:rgba(255,255,255,0.6);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .nav-links .hide{display:none;}
+  .nav-links{gap:16px;}
+  h1{font-size:clamp(2.2rem,9vw,3.5rem)!important;}
+  .stitle{font-size:clamp(1.5rem,5.5vw,2rem)!important;}
+  .two-col{grid-template-columns:1fr;}
+  .lev-card:first-child{border-radius:8px 8px 0 0;}
+  .lev-card:last-child{border-radius:0 0 8px 8px;}
+  .svc-nav-grid{grid-template-columns:1fr;}
+  .svc-nav-card.full{grid-column:auto;}
+  .port-grid{grid-template-columns:1fr!important;grid-auto-rows:200px;}
+  .port-item.large{grid-column:auto;}
+  .cta-box{padding:36px 20px;}
+  .main-cards{grid-template-columns:1fr;}
+  .an-grid{grid-template-columns:1fr 1fr;}
+  .qs-grid{grid-template-columns:1fr 1fr;}
+  .time-slots{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ NAV ════════════════ -->
+<nav id="mainNav">
+  <div class="logo" onclick="go('home')">Vivant Visuals</div>
+  <div class="nav-links">
+    <a class="hide" onclick="go('about')">About</a>
+    <div class="nav-drop hide">
+      <a>Services ▾</a>
+      <div class="drop-menu">
+        <a onclick="go('svc-photos')">Photos</a>
+        <a onclick="go('svc-videos')">Videos</a>
+        <a onclick="go('svc-aerial')">Aerial</a>
+        <a onclick="go('svc-2d')">2D Floor Plan</a>
+        <a onclick="go('svc-3d')">3D Floor Plan</a>
+        <a onclick="go('svc-twilight')">Twilight</a>
+        <a onclick="go('svc-website')">Property Website</a>
+      </div>
+    </div>
+    <a class="hide" onclick="go('leverage')">Leverage</a>
+    <a class="hide" onclick="go('portal-login')">Agent Portal</a>
+    <a class="nav-cta" onclick="go('book')">Book Now</a>
+  </div>
+</nav>
+
+<!-- ════════════════ HOME ════════════════ -->
+<div id="page-home" class="page active pt">
+
+  <section style="background:var(--black);padding:80px 6vw 60px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0d0d0d 0%,#1a1a1a 100%);z-index:0;"></div>
+    <div style="position:relative;z-index:1;">
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;color:var(--white);line-height:1.0;margin-bottom:24px;max-width:800px;">Premium<br>Real Estate<br><span style="color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.5);">Media.</span></h1>
+      <p style="color:rgba(255,255,255,0.5);font-size:1.05rem;font-weight:300;max-width:440px;line-height:1.7;margin-bottom:36px;">Listing media that sells the home — and builds the agent.</p>
+      <button class="btn" onclick="go('book')">Book Now</button>
+    </div>
+  </section>
+
+  <div class="mq-wrap">
+    <div class="mq-track">
+      <span class="mq-item">4× More Inquiries with Pro Media</span><span class="mq-dot"> · </span>
+      <span class="mq-item">32% Faster Sale with Video</span><span class="mq-dot"> · </span>
+      <span class="mq-item">68% Faster Sale with Photo + Video + Drone</span><span class="mq-dot"> · </span>
+      <span class="mq-item">73% of Buyers Want Video on a Listing</span><span class="mq-dot"> · </span>
+      <span class="mq-item">Only 9% of Agents Are Delivering It</span><span class="mq-dot"> · </span>
+      <span class="mq-item">10× More Zillow Page Time with 3D Tour</span><span class="mq-dot"> · </span>
+      <span class="mq-item">4× More Inquiries with Pro Media</span><span class="mq-dot"> · </span>
+      <span class="mq-item">32% Faster Sale with Video</span><span class="mq-dot"> · </span>
+      <span class="mq-item">68% Faster Sale with Photo + Video + Drone</span><span class="mq-dot"> · </span>
+      <span class="mq-item">73% of Buyers Want Video on a Listing</span><span class="mq-dot"> · </span>
+      <span class="mq-item">Only 9% of Agents Are Delivering It</span><span class="mq-dot"> · </span>
+      <span class="mq-item">10× More Zillow Page Time with 3D Tour</span><span class="mq-dot"> · </span>
+    </div>
+  </div>
+
+  <section style="background:var(--black2);border-top:1px solid var(--border);padding:80px 6vw;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+      <div>
+        <div class="slabel">What We Do</div>
+        <h2 class="stitle">Media That Works<br>Twice as Hard.</h2>
+        <div style="width:40px;height:1px;background:rgba(255,255,255,0.15);margin:24px 0;"></div>
+        <p style="color:var(--gray);font-size:1rem;line-height:1.85;font-weight:300;margin-bottom:20px;">Every listing is an opportunity — not just to sell a home, but to build a brand. Vivant Visuals creates premium listing media that does both simultaneously.</p>
+        <p style="color:var(--gray);font-size:1rem;line-height:1.85;font-weight:300;margin-bottom:32px;">We don't just deliver files. We build campaigns. Every photo, video, and piece of content is crafted with a purpose — and leaves you with material that keeps working long after the listing closes.</p>
+        <button class="btn" onclick="go('leverage')">Leverage Your Listing Today</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div class="wwd-card"><div class="wwd-num">01</div><div><div class="wwd-title">Premium Photos</div><div class="wwd-desc">Interior, exterior, detail, aerial & twilight — MLS-ready and built for social.</div></div></div>
+        <div class="wwd-card"><div class="wwd-num">02</div><div><div class="wwd-title">Tailored Videos</div><div class="wwd-desc">Two videos per listing — one for the home, one for your brand.</div></div></div>
+        <div class="wwd-card"><div class="wwd-num">03</div><div><div class="wwd-title">Floor Plan + 3D Tour</div><div class="wwd-desc">2D floor plan and a 3D Zillow tour published directly to your listing.</div></div></div>
+        <div class="wwd-card"><div class="wwd-num">04</div><div><div class="wwd-title">Property Website</div><div class="wwd-desc">A shareable listing page for buyers, agents, and QR codes.</div></div></div>
+        <div class="wwd-card"><div class="wwd-num">05</div><div><div class="wwd-title">Agent Branding</div><div class="wwd-desc">On-camera presence, scripts, and content that builds your brand.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--black);border-top:1px solid var(--border);padding:80px 6vw;text-align:center;">
+    <div class="slabel">By the Numbers</div>
+    <h2 class="stitle" style="margin-bottom:48px;">Why It Matters</h2>
+    <div class="stat-grid">
+      <div class="stat-block"><div class="stat-num">4×</div><div class="stat-label">More inquiries with professional media</div></div>
+      <div class="stat-block"><div class="stat-num">68%</div><div class="stat-label">Faster sale with photo + video + drone</div></div>
+      <div class="stat-block"><div class="stat-num">73%</div><div class="stat-label">Of buyers want video on a listing</div></div>
+      <div class="stat-block"><div class="stat-num">9%</div><div class="stat-label">Of agents are actually delivering it</div></div>
+      <div class="stat-block"><div class="stat-num">10×</div><div class="stat-label">More Zillow page time with a 3D tour</div></div>
+    </div>
+  </section>
+
+  <section style="background:var(--black2);border-top:1px solid var(--border);padding:80px 0;">
+    <div class="slabel" style="text-align:center;padding:0 6vw;">What We Offer</div>
+    <h2 class="stitle" style="text-align:center;margin-bottom:40px;padding:0 6vw;">Our Services</h2>
+    <div class="svc-outer">
+      <div class="svc-track" id="svcTrack">
+        <div class="svc-slide"><div class="svc-card"><div class="svc-icon">📷</div><h3 class="svc-title">Photos</h3><p class="svc-desc">Interior, exterior, detail, aerial, and twilight photography — MLS-ready and optimized for social.</p><div class="svc-stat">Listings with pro photos generate <strong>4× more inquiries.</strong></div></div></div>
+        <div class="svc-slide"><div class="svc-card"><div class="svc-icon">🎬</div><h3 class="svc-title">Video</h3><p class="svc-desc">Two fully tailored videos per listing — one to market the home, one to build your brand.</p><div class="svc-stat">Video alone drives a <strong>32% faster sale.</strong></div></div></div>
+        <div class="svc-slide"><div class="svc-card"><div class="svc-icon">📐</div><h3 class="svc-title">2D Floor Plan</h3><p class="svc-desc">Clean, accurate floor plans that help buyers visualize the layout before they step inside.</p><div class="svc-stat">Floor plans increase listing engagement and buyer confidence.</div></div></div>
+        <div class="svc-slide"><div class="svc-card"><div class="svc-icon">🏠</div><h3 class="svc-title">3D Zillow Tour</h3><p class="svc-desc">An interactive 3D tour published directly to your Zillow listing — a full walkthrough before any showing.</p><div class="svc-stat">3D tours drive up to <strong>10× more page time</strong> on Zillow.</div></div></div>
+        <div class="svc-slide"><div class="svc-card"><div class="svc-icon">🌆</div><h3 class="svc-title">Twilight</h3><p class="svc-desc">Golden hour and twilight photography that captures the home at its most dramatic.</p><div class="svc-stat">Twilight shots are among the highest-performing listing images on social.</div></div></div>
+        <div class="svc-slide"><div class="svc-card"><div class="svc-icon">🌐</div><h3 class="svc-title">Property Website</h3><p class="svc-desc">A dedicated listing website built for you to share — link, QR code, buyers, other agents. Everything in one page.</p><div class="svc-stat">One link. Every deliverable. Ready to share instantly.</div></div></div>
+      </div>
+    </div>
+    <div class="car-ctrl">
+      <button class="car-btn" id="svcPrev">&#8592;</button>
+      <div class="dots" id="svcDots"></div>
+      <button class="car-btn" id="svcNext">&#8594;</button>
+    </div>
+  </section>
+
+  <section style="background:var(--black);border-top:1px solid var(--border);padding:100px 6vw;text-align:center;">
+    <div style="max-width:640px;margin:0 auto;">
+      <div class="slabel">Get Started</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);color:var(--white);line-height:1.15;margin-bottom:40px;font-weight:700;">Ready to Elevate<br>Your Next Listing?</h2>
+      <button class="btn" style="font-size:0.9rem;padding:18px 48px;" onclick="go('book')">Book Now</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo" onclick="go('home')">Vivant Visuals</div>
+    <div class="foot-links">
+      <span onclick="go('about')">About</span>
+      <span onclick="go('services')">Services</span>
+      <span onclick="go('leverage')">Leverage</span>
+      <span onclick="go('portal-login')">Portal</span>
+    </div>
+    <p>© 2026 Vivant Visuals. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ════════════════ LEVERAGE ════════════════ -->
+<div id="page-leverage" class="page pt">
+  <section style="min-height:55vh;background:var(--black2);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 6vw;">
+    <p style="font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gray);margin-bottom:24px;">Vivant Visuals</p>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,5.5rem);color:var(--white);line-height:1.08;font-weight:800;">Turn Your Listing<br>Into <span style="color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.6);">Leverage</span></h1>
+  </section>
+
+  <section style="background:var(--black);padding:80px 6vw;text-align:center;">
+    <p class="slabel">The Concept</p>
+    <div style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);color:var(--white);line-height:1.15;margin-bottom:6px;font-weight:700;">Your Listing. Your Brand.</div>
+    <div style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);color:var(--white);font-weight:700;margin-bottom:32px;"><u style="text-decoration-color:rgba(255,255,255,0.4);text-underline-offset:6px;">Both Win.</u></div>
+    <p style="color:var(--gray);font-size:1.05rem;line-height:1.85;max-width:620px;margin:0 auto 72px;font-weight:300;">Every listing an agent secures is an opportunity — to leverage that home into something bigger. To attract future sellers. To build a brand that speaks before you do.</p>
+    <div class="two-col">
+      <div class="lev-card">
+        <div class="lev-num">01</div>
+        <h3>Leverage the Home</h3>
+        <p style="color:var(--gray);font-size:0.93rem;line-height:1.8;font-weight:300;">Premium MLS photos, two tailored videos, a 2D floor plan, 3D Zillow tour, and a property website — every deliverable working together to present the home at its best and sell faster.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;">73%</div><div style="font-size:0.7rem;color:var(--gray);margin-top:5px;line-height:1.4;">Of buyers want video</div></div>
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;">32%</div><div style="font-size:0.7rem;color:var(--gray);margin-top:5px;line-height:1.4;">Faster sale with pro photos</div></div>
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;">4×</div><div style="font-size:0.7rem;color:var(--gray);margin-top:5px;line-height:1.4;">More inquiries with pro media</div></div>
+        </div>
+      </div>
+      <div class="lev-card">
+        <div class="lev-num">02</div>
+        <h3>Leverage the Agent</h3>
+        <p style="color:var(--gray);font-size:0.93rem;line-height:1.8;font-weight:300;">Agent on camera, personalized scripts, and a campaign built around your goals — every piece of content doubles as brand material long after the listing closes.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;">71%</div><div style="font-size:0.7rem;color:var(--gray);margin-top:5px;line-height:1.4;">Choose agents with strong social</div></div>
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;">60%</div><div style="font-size:0.7rem;color:var(--gray);margin-top:5px;line-height:1.4;">Highest ROI from social</div></div>
+          <div style="text-align:center;"><div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;">52%</div><div style="font-size:0.7rem;color:var(--gray);margin-top:5px;line-height:1.4;">Social leads are higher quality</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--black2);border-top:1px solid rgba(255,255,255,0.06);padding:100px 6vw;text-align:center;">
+    <p class="slabel">What's Included</p>
+    <h2 class="stitle">The All-In-One Listing Bundle</h2>
+    <p class="ssub">Everything an agent needs to market a listing — and build a brand — in one seamless package.</p>
+    <div class="svc-grid">
+      <div class="svc-item"><div class="svc-item-icon">📷</div><h4>Premium Photos</h4><p>Interior, exterior, detail, aerial, and twilight — MLS-ready and built for social media.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">🎬</div><h4>Videos</h4><p>Two tailored videos — one markets the listing, one builds your brand.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">📐</div><h4>2D Floor Plan</h4><p>Accurate floor plans that reduce unqualified showings and increase serious buyer interest.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">🏠</div><h4>3D Zillow Tour</h4><p>Published directly to Zillow. Up to 10× more page time — pushing your listing higher.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">🌐</div><h4>Property Website</h4><p>A shareable listing page for buyers, agents, and QR codes.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">📁</div><h4>Agent Portal</h4><p>Every listing, photo, video, and raw file in one private dashboard.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">📞</div><h4>24/7 Support</h4><p>Reach out anytime. We handle everything so you can focus on your clients.</p></div>
+      <div class="svc-item"><div class="svc-item-icon">🎯</div><h4>Agent Branding</h4><p>On-camera, personalized scripts, and a campaign strategy built around your goals.</p></div>
+    </div>
+  </section>
+
+  <section style="background:var(--black2);border-top:1px solid rgba(255,255,255,0.06);padding:100px 6vw;text-align:center;">
+    <div style="max-width:780px;margin:0 auto;">
+      <p class="slabel">Why Vivant Visuals</p>
+      <h2 class="stitle" style="text-align:left;">Media is the Most Important Part of Bringing a Listing to Market.</h2>
+      <div style="width:48px;height:1px;background:rgba(255,255,255,0.15);margin:32px 0;"></div>
+      <p style="color:var(--gray);font-size:1.05rem;line-height:1.9;font-weight:300;margin-bottom:24px;text-align:left;">I built Vivant Visuals because I kept seeing the same thing — agents working incredibly hard to win a listing, and then handing off the marketing to whoever was cheapest and fastest.</p>
+      <p style="color:var(--gray);font-size:1.05rem;line-height:1.9;font-weight:300;margin-bottom:24px;text-align:left;">There's a lot of noise out there telling you that going viral is the key to winning more business — but I don't believe that. I believe that when every listing is marketed to the absolute best of its ability, you naturally build leverage. The virality is a byproduct. The brand is the goal.</p>
+      <p style="color:var(--gray);font-size:1.05rem;line-height:1.9;font-weight:300;text-align:left;">I can't promise your listing goes viral or that it sells in 14 days. What I can promise is that every piece of media we create together is built with intention — giving your listing the best possible shot at selling fast, while leaving you with content that keeps building your brand long after the sign comes down.</p>
+    </div>
+  </section>
+
+  <section style="background:var(--black);border-top:1px solid rgba(255,255,255,0.06);padding:100px 6vw;text-align:center;">
+    <p class="slabel">Get Started</p>
+    <h2 class="stitle">Ready to Leverage<br>Your Next Listing?</h2>
+    <div class="cta-box">
+      <h3>Book a Free Consultation</h3>
+      <p>Let's talk about your next listing and build a campaign that sells the home — and grows your brand.</p>
+      <a href="https://calendly.com/YOUR_LINK" target="_blank" class="btn">Schedule a Call</a>
+      <p class="cta-note">Free 15-minute consultation · No commitment</p>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><div class="foot-links"><span onclick="go('about')">About</span><span onclick="go('services')">Services</span><span onclick="go('portal-login')">Portal</span></div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<!-- ════════════════ ABOUT ════════════════ -->
+<div id="page-about" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);">
+    <div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);line-height:1.1;">Built for Agents<br>Who Take Marketing<br><span style="color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.6);">Seriously.</span></h1>
+    </div>
+  </div>
+  <div style="background:var(--black);padding:80px 6vw;">
+    <div class="about-inner">
+      <h2 class="stitle" style="margin-bottom:32px;">More Than a Media Company.<br>A Strategic Partner.</h2>
+      <p>Vivant Visuals was built around one simple idea: bringing a home to market should be as seamless and stress-free as possible for the agent. We handle every piece of the media process from start to finish so you can stay focused on what you do best. One shoot, one team, one streamlined experience, and everything you need is ready to go.</p>
+      <p>Every agent we work with gets a campaign built specifically around their listing and their brand. We show up prepared, we deliver fast, and every piece of content we create has a clear purpose behind it.</p>
+      <h3>Why Vivant Visuals</h3>
+      <p>High quality marketing is crucial in today's market. Buyers are scrolling faster than ever, and the first impression your listing makes is almost always a digital one. The agents who win are the ones whose properties stop the scroll, generate real interest, and position them as someone worth working with. That starts with the media.</p>
+      <p>At Vivant Visuals we operate around two goals. The first is delivering the highest quality media possible for every single listing we touch, because we believe every home deserves to be shown at its absolute best. The second is making the marketing process as simple as it can be for the agent. No chasing files, no coordinating multiple vendors, no wondering what comes next. You book one shoot and we take care of everything from photos and video to floor plans, 3D tours, and a dedicated property website. You focus on the relationship. We handle the rest.</p>
+      <p>We can't promise your listing goes viral or that it sells in 14 days. What we can promise is that every piece of media we create together is built with intention, giving your listing the best possible shot at selling fast while leaving you with content that keeps building your brand long after the sign comes down.</p>
+    </div>
+  </div>
+  <section style="background:var(--black2);border-top:1px solid var(--border);padding:80px 6vw;text-align:center;">
+    <div class="cta-box"><h3>Book a Free Consultation</h3><p>15 minutes. No commitment. Let's talk about your next listing.</p><button class="btn" onclick="go('book')">Book Now</button></div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<!-- ════════════════ SERVICES HUB ════════════════ -->
+<div id="page-services" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);">
+    <div><p style="font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gray);margin-bottom:24px;">Our Work</p><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);line-height:1.1;">Services</h1></div>
+  </div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="svc-nav-grid">
+      <div class="svc-nav-card" onclick="go('svc-photos')"><div class="svc-nav-icon">📷</div><div class="svc-nav-title">Photos</div><div class="svc-nav-sub">Interior · Exterior · Detail · Aerial · Twilight</div></div>
+      <div class="svc-nav-card" onclick="go('svc-videos')"><div class="svc-nav-icon">🎬</div><div class="svc-nav-title">Videos</div><div class="svc-nav-sub">Listing Videos · Brand Reels · Campaigns</div></div>
+      <div class="svc-nav-card" onclick="go('svc-aerial')"><div class="svc-nav-icon">🚁</div><div class="svc-nav-title">Aerial</div><div class="svc-nav-sub">Drone Photography · Aerial Video</div></div>
+      <div class="svc-nav-card" onclick="go('svc-2d')"><div class="svc-nav-icon">📐</div><div class="svc-nav-title">2D Floor Plan</div><div class="svc-nav-sub">Accurate · Clean · Fast Turnaround</div></div>
+      <div class="svc-nav-card" onclick="go('svc-3d')"><div class="svc-nav-icon">🏠</div><div class="svc-nav-title">3D Floor Plan</div><div class="svc-nav-sub">Interactive · Published to Zillow</div></div>
+      <div class="svc-nav-card" onclick="go('svc-twilight')"><div class="svc-nav-icon">🌆</div><div class="svc-nav-title">Twilight</div><div class="svc-nav-sub">Golden Hour · Dusk · Dramatic Exteriors</div></div>
+      <div class="svc-nav-card full" onclick="go('svc-website')"><div class="svc-nav-icon">🌐</div><div class="svc-nav-title">Property Website</div><div class="svc-nav-sub">Shareable · QR Code Ready · All Media in One Page</div></div>
+    </div>
+  </section>
+  <section style="background:var(--black2);border-top:1px solid var(--border);padding:80px 6vw;text-align:center;">
+    <div class="cta-box"><h3>Ready to Get Started?</h3><p>Book a free 15-minute consultation and let's build a campaign around your next listing.</p><button class="btn" onclick="go('book')">Book Now</button></div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<!-- ════════════════ SERVICE PORTFOLIO PAGES ════════════════ -->
+<div id="page-svc-photos" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">Photos</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item large"><div class="port-thumb"><div class="port-placeholder">📷 Your Photo Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;"><div class="port-placeholder">📷</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#181818;"><div class="port-placeholder">📷</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1e1e1e;"><div class="port-placeholder">📷</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#161616;"><div class="port-placeholder">📷 Your Photo Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1a1a1a;"><div class="port-placeholder">📷</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#181818;"><div class="port-placeholder">📷 Your Photo Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;"><div class="port-placeholder">📷</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1a1a1a;"><div class="port-placeholder">📷</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<div id="page-svc-videos" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">Videos</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item large"><div class="port-thumb" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center;"><div style="width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:1.4rem;">▶</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;display:flex;align-items:center;justify-content:center;"><div style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);">▶</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#181818;display:flex;align-items:center;justify-content:center;"><div style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);">▶</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#161616;display:flex;align-items:center;justify-content:center;"><div style="width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:1.4rem;">▶</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1a1a1a;display:flex;align-items:center;justify-content:center;"><div style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);">▶</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<div id="page-svc-aerial" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">Aerial</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item large"><div class="port-thumb"><div class="port-placeholder">🚁 Your Aerial Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;"><div class="port-placeholder">🚁</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#181818;"><div class="port-placeholder">🚁</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1e1e1e;"><div class="port-placeholder">🚁</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#161616;"><div class="port-placeholder">🚁 Your Aerial Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1a1a1a;"><div class="port-placeholder">🚁</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<div id="page-svc-2d" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">2D Floor Plan</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item"><div class="port-thumb"><div class="port-placeholder">📐</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;"><div class="port-placeholder">📐</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#181818;"><div class="port-placeholder">📐</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#161616;"><div class="port-placeholder">📐 Your Floor Plan Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1a1a1a;"><div class="port-placeholder">📐</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<div id="page-svc-3d" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">3D Floor Plan</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item large"><div class="port-thumb"><div class="port-placeholder">🏠 Your 3D Tour Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;"><div class="port-placeholder">🏠</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#181818;"><div class="port-placeholder">🏠</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1e1e1e;"><div class="port-placeholder">🏠</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#161616;"><div class="port-placeholder">🏠 Your 3D Tour Here</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<div id="page-svc-twilight" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">Twilight</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item large"><div class="port-thumb" style="background:#0d0d14;"><div class="port-placeholder">🌆 Your Twilight Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#0f0f18;"><div class="port-placeholder">🌆</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#0d0d12;"><div class="port-placeholder">🌆</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#111118;"><div class="port-placeholder">🌆</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#0e0e16;"><div class="port-placeholder">🌆 Your Twilight Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#0d0d14;"><div class="port-placeholder">🌆</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<div id="page-svc-website" class="page pt">
+  <div class="hero-wrap" style="background:var(--black2);min-height:35vh;"><h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:800;color:var(--white);">Property Website</h1></div>
+  <section style="background:var(--black);padding:60px 6vw;">
+    <div class="port-grid">
+      <div class="port-item large"><div class="port-thumb"><div class="port-placeholder">🌐 Your Property Website Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1c1c1c;"><div class="port-placeholder">🌐</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#181818;"><div class="port-placeholder">🌐</div></div></div>
+      <div class="port-item large"><div class="port-thumb" style="background:#161616;"><div class="port-placeholder">🌐 Your Property Website Here</div></div></div>
+      <div class="port-item"><div class="port-thumb" style="background:#1a1a1a;"><div class="port-placeholder">🌐</div></div></div>
+    </div>
+  </section>
+  <footer><div class="logo" onclick="go('home')">Vivant Visuals</div><p>© 2026 Vivant Visuals. All rights reserved.</p></footer>
+</div>
+
+<!-- ════════════════ BOOK NOW ════════════════ -->
+<div id="page-book" class="page pt">
+
+  <!-- Hero -->
+  <section style="background:var(--black2);padding:80px 6vw 60px;text-align:center;border-bottom:1px solid var(--border);">
+    <p style="font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gray);margin-bottom:20px;">Get Started</p>
+    <h1 style="font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:800;color:var(--white);line-height:1.05;margin-bottom:20px;">Let's Talk About<br>Your Next <span style="color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.5);">Listing.</span></h1>
+    <p style="color:var(--gray);font-size:1.05rem;font-weight:300;max-width:500px;margin:0 auto;line-height:1.7;">Free 15-minute consultation. No commitment. No pitch.</p>
+  </section>
+
+  <!-- What to Expect + CTA -->
+  <section style="background:var(--black);padding:80px 6vw;">
+    <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;">
+
+      <!-- Left: What to Expect -->
+      <div>
+        <div class="slabel">What to Expect</div>
+        <h2 class="stitle" style="margin-bottom:32px;">A Real Conversation.<br>No Pressure.</h2>
+        <p style="color:var(--gray);font-size:1rem;line-height:1.85;font-weight:300;margin-bottom:40px;">This call is about you — your goals, your next listing, and whether Vivant Visuals is the right fit. We'll talk through what you're trying to build, what the property needs, and what a campaign would look like in your hands.</p>
+
+        <div style="display:flex;flex-direction:column;gap:2px;margin-bottom:40px;">
+          <div style="background:var(--black2);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:flex-start;gap:16px;">
+            <div style="font-size:1.4rem;flex-shrink:0;">📞</div>
+            <div>
+              <div style="font-size:0.9rem;color:var(--white);font-weight:500;margin-bottom:4px;">Free 15-Minute Call</div>
+              <div style="font-size:0.8rem;color:var(--gray);line-height:1.6;font-weight:300;">A quick conversation to understand your goals and see if we're the right fit.</div>
+            </div>
+          </div>
+          <div style="background:var(--black2);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:flex-start;gap:16px;">
+            <div style="font-size:1.4rem;flex-shrink:0;">🎯</div>
+            <div>
+              <div style="font-size:0.9rem;color:var(--white);font-weight:500;margin-bottom:4px;">Custom Campaign Strategy</div>
+              <div style="font-size:0.8rem;color:var(--gray);line-height:1.6;font-weight:300;">If it's a fit, we'll map out a campaign built around your listing and brand goals.</div>
+            </div>
+          </div>
+          <div style="background:var(--black2);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:flex-start;gap:16px;">
+            <div style="font-size:1.4rem;flex-shrink:0;">🎬</div>
+            <div>
+              <div style="font-size:0.9rem;color:var(--white);font-weight:500;margin-bottom:4px;">On-Site Production</div>
+              <div style="font-size:0.8rem;color:var(--gray);line-height:1.6;font-weight:300;">4–5 hours on site covering every deliverable. Photos, videos, floor plan, 3D tour — done in one visit.</div>
+            </div>
+          </div>
+          <div style="background:var(--black2);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:flex-start;gap:16px;">
+            <div style="font-size:1.4rem;flex-shrink:0;">⚡</div>
+            <div>
+              <div style="font-size:0.9rem;color:var(--white);font-weight:500;margin-bottom:4px;">Fast Turnaround</div>
+              <div style="font-size:0.8rem;color:var(--gray);line-height:1.6;font-weight:300;">Photos, floor plan & 3D tour within 24 hours. Videos within 48–72 hours.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;">
+          <div style="background:var(--black2);border:1px solid var(--border);padding:24px 16px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);font-weight:700;line-height:1;margin-bottom:8px;">4×</div>
+            <div style="font-size:0.72rem;color:var(--gray);line-height:1.5;font-weight:300;">More inquiries with pro media</div>
+          </div>
+          <div style="background:var(--black2);border:1px solid var(--border);padding:24px 16px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);font-weight:700;line-height:1;margin-bottom:8px;">68%</div>
+            <div style="font-size:0.72rem;color:var(--gray);line-height:1.5;font-weight:300;">Faster sale with full bundle</div>
+          </div>
+          <div style="background:var(--black2);border:1px solid var(--border);padding:24px 16px;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);font-weight:700;line-height:1;margin-bottom:8px;">9%</div>
+            <div style="font-size:0.72rem;color:var(--gray);line-height:1.5;font-weight:300;">Of agents deliver this. Be one of them.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Booking Card -->
+      <div>
+        <div style="background:var(--black2);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:48px 40px;position:sticky;top:80px;">
+          <div style="text-align:center;margin-bottom:36px;">
+            <div style="font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);font-weight:700;margin-bottom:10px;">Book Your Free Call</div>
+            <div style="font-size:0.82rem;color:var(--gray);font-weight:300;line-height:1.6;">15 minutes · No commitment · Southern California</div>
+          </div>
+
+          <!-- Packages -->
+          <div style="margin-bottom:32px;">
+            <div style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:14px;">What are you interested in?</div>
+            <div id="bookPkgCards" style="display:flex;flex-direction:column;gap:8px;">
+              <div class="book-pkg-opt" onclick="selectBookPkg(this,'Full Bundle')" style="background:var(--black3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color 0.2s;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <div style="font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:2px;">Full Bundle</div>
+                  <div style="font-size:0.75rem;color:var(--gray);">Photos · 2 Videos · Floor Plan · 3D Tour · Site · Branding</div>
+                </div>
+                <div class="pkg-check" style="width:20px;height:20px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;"></div>
+              </div>
+              <div class="book-pkg-opt" onclick="selectBookPkg(this,'Video Bundle')" style="background:var(--black3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color 0.2s;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <div style="font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:2px;">Video Bundle</div>
+                  <div style="font-size:0.75rem;color:var(--gray);">Cinematic Listing Video · Vertical Reel · Showcase Video</div>
+                </div>
+                <div class="pkg-check" style="width:20px;height:20px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;"></div>
+              </div>
+              <div class="book-pkg-opt" onclick="selectBookPkg(this,'Not Sure Yet')" style="background:var(--black3);border:1px solid var(--border);border-radius:8px;padding:14px 16px;cursor:pointer;transition:border-color 0.2s;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <div style="font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:2px;">Not Sure Yet</div>
+                  <div style="font-size:0.75rem;color:var(--gray);">Let's talk it through on the call</div>
+                </div>
+                <div class="pkg-check" style="width:20px;height:20px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA Button -->
+          <a href="https://calendly.com/YOUR_LINK" target="_blank" class="btn" style="width:100%;text-align:center;display:block;padding:16px;font-size:0.85rem;" id="bookNowBtn">Schedule My Free Call →</a>
+          <p style="text-align:center;color:rgba(255,255,255,0.2);font-size:0.75rem;margin-top:14px;line-height:1.6;">You'll be taken to Calendly to pick a time that works for you.</p>
+
+          <div style="border-top:1px solid var(--border);margin-top:28px;padding-top:24px;">
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.25);text-align:center;margin-bottom:14px;letter-spacing:0.08em;text-transform:uppercase;">Or reach out directly</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <a href="/cdn-cgi/l/email-protection#4e3827382f203a38273d3b2f223d0e29232f2722602d2123" style="display:flex;align-items:center;gap:12px;background:var(--black3);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+                <span style="font-size:1rem;">✉️</span>
+                <span style="font-size:0.82rem;color:rgba(255,255,255,0.5);"><span class="__cf_email__" data-cfemail="80f6e9f6e1eef4f6e9f3f5e1ecf3c0e7ede1e9ecaee3efed">[email&#160;protected]</span></span>
+              </a>
+              <a href="https://www.instagram.com/vivantvisuals" target="_blank" style="display:flex;align-items:center;gap:12px;background:var(--black3);border:1px solid var(--border);border-radius:6px;padding:12px 16px;text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+                <span style="font-size:1rem;">📸</span>
+                <span style="font-size:0.82rem;color:rgba(255,255,255,0.5);">@vivantvisuals</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Promise -->
+  <section style="background:var(--black2);border-top:1px solid var(--border);padding:80px 6vw;text-align:center;">
+    <div style="max-width:680px;margin:0 auto;">
+      <div class="slabel">The Promise</div>
+      <h2 class="stitle" style="margin-bottom:28px;">Every Piece of Media<br>Built With Intention.</h2>
+      <p style="color:var(--gray);font-size:1.05rem;line-height:1.9;font-weight:300;">I can't promise your listing goes viral or that it sells in 14 days. What I can promise is that every piece of media we create together is built with intention — giving your listing the best possible shot at selling fast, while leaving you with content that keeps building your brand long after the sign comes down.</p>
+      <p style="color:rgba(255,255,255,0.35);font-size:0.9rem;margin-top:20px;font-style:italic;">— Tanner Wright, Vivant Visuals</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo" onclick="go('home')">Vivant Visuals</div>
+    <div class="foot-links">
+      <span onclick="go('about')">About</span>
+      <span onclick="go('services')">Services</span>
+      <span onclick="go('leverage')">Leverage</span>
+      <span onclick="go('portal-login')">Portal</span>
+    </div>
+    <p>© 2026 Vivant Visuals. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- ════════════════ PORTAL LOGIN ════════════════ -->
+<style>
+/* ── PORTAL LOGIN ─────────────────────────────── */
+.px-login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;}
+.px-login-left{background:#0a0a0a;display:flex;flex-direction:column;justify-content:space-between;padding:48px;border-right:1px solid rgba(255,255,255,0.06);}
+.px-login-right{background:#080808;display:flex;align-items:center;justify-content:center;padding:48px;}
+.px-brand{font-family:'Playfair Display',serif;font-size:1.05rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--white);}
+.px-tagline{font-size:clamp(2.2rem,4vw,3.4rem);font-family:'Playfair Display',serif;font-weight:800;color:var(--white);line-height:1.1;margin-bottom:20px;}
+.px-tagline span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.35);}
+.px-left-sub{color:rgba(255,255,255,0.3);font-size:0.9rem;font-weight:300;line-height:1.7;max-width:320px;}
+.px-left-foot{color:rgba(255,255,255,0.15);font-size:0.72rem;letter-spacing:0.08em;}
+.px-form-wrap{width:100%;max-width:400px;}
+.px-form-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);font-weight:700;margin-bottom:6px;}
+.px-form-sub{color:rgba(255,255,255,0.3);font-size:0.82rem;margin-bottom:36px;font-weight:300;}
+.px-field{margin-bottom:18px;}
+.px-field label{display:block;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:9px;}
+.px-field input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:5px;padding:14px 16px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
+.px-field input:focus{border-color:rgba(255,255,255,0.35);}
+.px-field input::placeholder{color:rgba(255,255,255,0.18);}
+.px-signin-btn{width:100%;background:var(--white);color:var(--black);padding:15px;border-radius:5px;font-weight:700;font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;margin-top:6px;}
+.px-signin-btn:hover{background:#e0e0e0;transform:translateY(-1px);}
+.px-back{color:rgba(255,255,255,0.25);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;background:none;border:none;margin-top:18px;display:block;text-align:center;width:100%;}
+.px-back:hover{color:rgba(255,255,255,0.6);}
+@media(max-width:768px){.px-login{grid-template-columns:1fr;}.px-login-left{display:none;}}
+
+/* ── PORTAL DASHBOARD ─────────────────────────── */
+.px-dash{display:flex;min-height:100vh;background:#080808;}
+
+/* Sidebar */
+.px-sidebar{width:240px;flex-shrink:0;background:#0a0a0a;border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
+.px-sidebar-brand{padding:32px 28px 28px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.px-sidebar-brand-name{font-family:'Playfair Display',serif;font-size:0.95rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
+.px-sidebar-brand-sub{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.2);}
+.px-sidebar-agent{padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:12px;}
+.px-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.7);flex-shrink:0;letter-spacing:0.05em;}
+.px-agent-info{}
+.px-agent-name{font-size:0.82rem;color:var(--white);font-weight:500;}
+.px-agent-role{font-size:0.68rem;color:rgba(255,255,255,0.25);letter-spacing:0.06em;text-transform:uppercase;}
+.px-nav{flex:1;padding:20px 0;}
+.px-nav-section{padding:0 20px;margin-bottom:6px;}
+.px-nav-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);padding:0 8px;margin-bottom:6px;}
+.px-nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:6px;cursor:pointer;transition:background 0.15s;margin-bottom:2px;}
+.px-nav-item:hover{background:rgba(255,255,255,0.05);}
+.px-nav-item.active{background:rgba(255,255,255,0.08);}
+.px-nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0.4;font-size:0.85rem;}
+.px-nav-item.active .px-nav-icon,.px-nav-item:hover .px-nav-icon{opacity:0.9;}
+.px-nav-text{font-size:0.8rem;color:rgba(255,255,255,0.4);font-weight:400;transition:color 0.15s;}
+.px-nav-item.active .px-nav-text{color:var(--white);font-weight:500;}
+.px-nav-item:hover .px-nav-text{color:rgba(255,255,255,0.8);}
+.px-nav-badge{margin-left:auto;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);font-size:0.6rem;font-weight:600;padding:2px 7px;border-radius:10px;}
+.px-sidebar-foot{padding:20px 28px;border-top:1px solid rgba(255,255,255,0.06);}
+.px-signout{background:none;border:none;color:rgba(255,255,255,0.2);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;font-family:'Inter',sans-serif;padding:0;}
+.px-signout:hover{color:rgba(255,255,255,0.6);}
+
+/* Main content area */
+.px-main{flex:1;margin-left:240px;min-height:100vh;display:flex;flex-direction:column;}
+.px-topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 36px;border-bottom:1px solid rgba(255,255,255,0.06);background:#080808;position:sticky;top:0;z-index:100;}
+.px-topbar-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);font-weight:600;}
+.px-topbar-sub{font-size:0.75rem;color:rgba(255,255,255,0.25);margin-top:2px;}
+.px-content{flex:1;padding:36px;}
+
+/* Screens */
+.px-screen{display:none;}
+.px-screen.active{display:block;}
+
+/* Dashboard overview */
+.px-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px;}
+.px-stat{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:20px 22px;}
+.px-stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);font-weight:700;line-height:1;margin-bottom:6px;}
+.px-stat-lbl{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);}
+
+/* Listing table */
+.px-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.px-section-title{font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+.px-listing-table{width:100%;border-collapse:collapse;}
+.px-listing-table th{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);font-weight:500;padding:10px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);}
+.px-listing-table td{padding:16px 16px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;}
+.px-listing-table tr{transition:background 0.15s;cursor:pointer;}
+.px-listing-table tr:hover td{background:rgba(255,255,255,0.03);}
+.px-listing-addr{font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:3px;}
+.px-listing-pkg{font-size:0.72rem;color:rgba(255,255,255,0.3);}
+.px-listing-date{font-size:0.78rem;color:rgba(255,255,255,0.35);}
+.px-listing-assets{display:flex;gap:6px;flex-wrap:wrap;}
+.px-asset-tag{font-size:0.62rem;letter-spacing:0.08em;padding:3px 9px;border-radius:4px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.07);}
+.px-status-tag{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;font-weight:500;}
+.px-status-active{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);}
+.px-status-sold{background:transparent;color:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.08);}
+.px-table-arrow{color:rgba(255,255,255,0.2);font-size:1rem;}
+
+/* Listing detail */
+.px-detail-header{margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.px-detail-addr{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);font-weight:700;margin-bottom:6px;}
+.px-detail-meta{font-size:0.78rem;color:rgba(255,255,255,0.3);}
+.px-tabs{display:flex;gap:2px;margin-bottom:24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:4px;}
+.px-tab{flex:1;text-align:center;padding:9px 16px;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);cursor:pointer;border-radius:5px;transition:all 0.2s;font-weight:500;}
+.px-tab.active{background:rgba(255,255,255,0.08);color:var(--white);}
+.px-tab:hover{color:rgba(255,255,255,0.7);}
+.px-tab-pane{display:none;}
+.px-tab-pane.active{display:block;}
+.px-media-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:12px;transition:border-color 0.2s;}
+.px-media-card:hover{border-color:rgba(255,255,255,0.15);}
+.px-media-icon{width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.px-media-info{}
+.px-media-title{font-size:0.92rem;color:var(--white);font-weight:500;margin-bottom:4px;}
+.px-media-desc{font-size:0.75rem;color:rgba(255,255,255,0.3);line-height:1.5;}
+.px-dl-btn{background:var(--white);color:var(--black);font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:11px 22px;border-radius:5px;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:background 0.2s,transform 0.15s;display:inline-block;}
+.px-dl-btn:hover{background:#ddd;transform:translateY(-1px);}
+.px-included{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:18px 20px;margin-top:8px;}
+.px-included-label{font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:12px;}
+.px-included-item{font-size:0.8rem;color:rgba(255,255,255,0.4);padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.px-included-item:last-child{border-bottom:none;}
+
+@media(max-width:900px){
+  .px-sidebar{width:200px;}
+  .px-main{margin-left:200px;}
+  .px-stats{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:680px){
+  .px-sidebar{position:relative;width:100%;height:auto;border-right:none;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .px-nav{display:flex;padding:10px;overflow-x:auto;}
+  .px-nav-section{display:flex;gap:4px;padding:0;margin-bottom:0;}
+  .px-nav-label{display:none;}
+  .px-main{margin-left:0;}
+  .px-dash{flex-direction:column;}
+  .px-sidebar-agent{display:none;}
+}
+</style>
+
+<!-- ════════════════ PORTAL LOGIN ════════════════ -->
+<div id="page-portal-login" class="page">
+  <div class="px-login">
+    <div class="px-login-left">
+      <div>
+        <div class="px-brand">Vivant Visuals</div>
+      </div>
+      <div>
+        <div class="px-tagline">Your listing media.<br><span>Always ready.</span></div>
+        <div class="px-left-sub">Access your photos, videos, floor plans and more — all in one place, delivered fast and at full quality.</div>
+      </div>
+      <div class="px-left-foot">© 2026 Vivant Visuals · Southern California</div>
+    </div>
+    <div class="px-login-right">
+      <div class="px-form-wrap">
+        <div class="px-form-title">Sign In</div>
+        <div class="px-form-sub">Agent Portal · Early Access</div>
+        <div class="px-field"><label>Email Address</label><input type="email" id="loginEmail" placeholder="agent@compass.com"/></div>
+        <div class="px-field"><label>Password</label><input type="password" id="loginPw" placeholder="••••••••"/></div>
+        <button class="px-signin-btn" onclick="portalSignIn()">Sign In →</button>
+        <button class="px-back" onclick="go('home')">← Back to Site</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PORTAL DASHBOARD ════════════════ -->
+<div id="page-portal-dash" class="page">
+  <div class="px-dash">
+
+    <!-- SIDEBAR -->
+    <aside class="px-sidebar">
+      <div class="px-sidebar-brand">
+        <div class="px-sidebar-brand-name">Vivant Visuals</div>
+        <div class="px-sidebar-brand-sub">Agent Portal</div>
+      </div>
+      <div class="px-sidebar-agent">
+        <div class="px-avatar">SJ</div>
+        <div class="px-agent-info">
+          <div class="px-agent-name">Sarah Johnson</div>
+          <div class="px-agent-role">Compass · Beverly Hills</div>
+        </div>
+      </div>
+      <nav class="px-nav">
+        <div class="px-nav-section">
+          <div class="px-nav-label">Media</div>
+          <div class="px-nav-item active" id="nav-overview" onclick="pxScreen('overview','Overview','Your Media Library')">
+            <div class="px-nav-icon">⬛</div>
+            <span class="px-nav-text">Overview</span>
+          </div>
+          <div class="px-nav-item" id="nav-listings" onclick="pxScreen('listings','Listings','All Your Listings')">
+            <div class="px-nav-icon">🏠</div>
+            <span class="px-nav-text">Listings</span>
+            <span class="px-nav-badge">3</span>
+          </div>
+          <div class="px-nav-item" id="nav-photos" onclick="pxScreen('photos','Photos','All Photos')">
+            <div class="px-nav-icon">📷</div>
+            <span class="px-nav-text">Photos</span>
+          </div>
+          <div class="px-nav-item" id="nav-videos" onclick="pxScreen('videos','Videos','All Videos')">
+            <div class="px-nav-icon">🎬</div>
+            <span class="px-nav-text">Videos</span>
+          </div>
+        </div>
+        <div class="px-nav-section" style="margin-top:20px;">
+          <div class="px-nav-label">Account</div>
+          <div class="px-nav-item" onclick="window.location='vivant-visuals-booking.html'">
+            <div class="px-nav-icon">📅</div>
+            <span class="px-nav-text">Book a Shoot</span>
+          </div>
+        </div>
+      </nav>
+      <div class="px-sidebar-foot">
+        <button class="px-signout" onclick="portalSignOut()">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="px-main">
+      <div class="px-topbar">
+        <div>
+          <div class="px-topbar-title" id="pxTitle">Overview</div>
+          <div class="px-topbar-sub" id="pxSub">Your Media Library</div>
+        </div>
+      </div>
+      <div class="px-content">
+
+        <!-- OVERVIEW SCREEN -->
+        <div class="px-screen active" id="px-overview">
+          <div class="px-stats">
+            <div class="px-stat"><div class="px-stat-num">3</div><div class="px-stat-lbl">Total Listings</div></div>
+            <div class="px-stat"><div class="px-stat-num">84</div><div class="px-stat-lbl">Total Photos</div></div>
+            <div class="px-stat"><div class="px-stat-num">6</div><div class="px-stat-lbl">Total Videos</div></div>
+            <div class="px-stat"><div class="px-stat-num">2</div><div class="px-stat-lbl">Active Listings</div></div>
+          </div>
+          <div class="px-section-head">
+            <div class="px-section-title">Recent Listings</div>
+          </div>
+          <table class="px-listing-table">
+            <thead><tr><th>Property</th><th>Delivered</th><th>Assets</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr onclick="pxOpenListing()">
+                <td><div class="px-listing-addr">142 Maple Ridge Dr.</div><div class="px-listing-pkg">Full Bundle</div></td>
+                <td><div class="px-listing-date">Mar 18, 2026</div></td>
+                <td><div class="px-listing-assets"><span class="px-asset-tag">28 Photos</span><span class="px-asset-tag">2 Videos</span><span class="px-asset-tag">Floor Plan</span><span class="px-asset-tag">3D Tour</span></div></td>
+                <td><span class="px-status-tag px-status-active">Active</span></td>
+                <td class="px-table-arrow">›</td>
+              </tr>
+              <tr onclick="pxOpenListing()">
+                <td><div class="px-listing-addr">87 Clearwater Blvd.</div><div class="px-listing-pkg">Full Bundle</div></td>
+                <td><div class="px-listing-date">Feb 28, 2026</div></td>
+                <td><div class="px-listing-assets"><span class="px-asset-tag">32 Photos</span><span class="px-asset-tag">2 Videos</span><span class="px-asset-tag">Floor Plan</span></div></td>
+                <td><span class="px-status-tag px-status-active">Active</span></td>
+                <td class="px-table-arrow">›</td>
+              </tr>
+              <tr onclick="pxOpenListing()">
+                <td><div class="px-listing-addr">304 Elmwood Court</div><div class="px-listing-pkg">Full Bundle</div></td>
+                <td><div class="px-listing-date">Jan 14, 2026</div></td>
+                <td><div class="px-listing-assets"><span class="px-asset-tag">24 Photos</span><span class="px-asset-tag">2 Videos</span></div></td>
+                <td><span class="px-status-tag px-status-sold">Sold</span></td>
+                <td class="px-table-arrow">›</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- LISTINGS SCREEN -->
+        <div class="px-screen" id="px-listings">
+          <table class="px-listing-table">
+            <thead><tr><th>Property</th><th>Delivered</th><th>Assets</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr onclick="pxOpenListing()">
+                <td><div class="px-listing-addr">142 Maple Ridge Dr.</div><div class="px-listing-pkg">Full Bundle</div></td>
+                <td><div class="px-listing-date">Mar 18, 2026</div></td>
+                <td><div class="px-listing-assets"><span class="px-asset-tag">28 Photos</span><span class="px-asset-tag">2 Videos</span><span class="px-asset-tag">Floor Plan</span><span class="px-asset-tag">3D Tour</span></div></td>
+                <td><span class="px-status-tag px-status-active">Active</span></td>
+                <td class="px-table-arrow">›</td>
+              </tr>
+              <tr onclick="pxOpenListing()">
+                <td><div class="px-listing-addr">87 Clearwater Blvd.</div><div class="px-listing-pkg">Full Bundle</div></td>
+                <td><div class="px-listing-date">Feb 28, 2026</div></td>
+                <td><div class="px-listing-assets"><span class="px-asset-tag">32 Photos</span><span class="px-asset-tag">2 Videos</span><span class="px-asset-tag">Floor Plan</span></div></td>
+                <td><span class="px-status-tag px-status-active">Active</span></td>
+                <td class="px-table-arrow">›</td>
+              </tr>
+              <tr onclick="pxOpenListing()">
+                <td><div class="px-listing-addr">304 Elmwood Court</div><div class="px-listing-pkg">Full Bundle</div></td>
+                <td><div class="px-listing-date">Jan 14, 2026</div></td>
+                <td><div class="px-listing-assets"><span class="px-asset-tag">24 Photos</span><span class="px-asset-tag">2 Videos</span></div></td>
+                <td><span class="px-status-tag px-status-sold">Sold</span></td>
+                <td class="px-table-arrow">›</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- LISTING DETAIL SCREEN -->
+        <div class="px-screen" id="px-listing-detail">
+          <div class="px-detail-header">
+            <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;cursor:pointer;" onclick="pxScreen('listings','Listings','All Your Listings')">← All Listings</div>
+            <div class="px-detail-addr">142 Maple Ridge Dr.</div>
+            <div class="px-detail-meta">Full Bundle · Delivered March 18, 2026 · Active</div>
+          </div>
+          <div class="px-tabs">
+            <div class="px-tab active" onclick="pxTab('dl-photos',this)">Photos</div>
+            <div class="px-tab" onclick="pxTab('dl-videos',this)">Videos</div>
+            <div class="px-tab" onclick="pxTab('dl-raw',this)">Raw Files</div>
+          </div>
+          <div class="px-tab-pane active" id="dl-photos">
+            <div class="px-media-card">
+              <div class="px-media-icon">📁</div>
+              <div class="px-media-info">
+                <div class="px-media-title">All Photos</div>
+                <div class="px-media-desc">28 photos · Interior, Exterior, Detail, Aerial, Twilight · Full Resolution</div>
+              </div>
+              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn">⬇ Download All</a>
+            </div>
+            <div class="px-included">
+              <div class="px-included-label">What's included</div>
+              <div class="px-included-item">Interior photos — living, kitchen, bedrooms, bathrooms</div>
+              <div class="px-included-item">Exterior and curb appeal shots</div>
+              <div class="px-included-item">Detail and lifestyle shots</div>
+              <div class="px-included-item">Aerial and drone photos</div>
+              <div class="px-included-item">Twilight and golden hour shots</div>
+            </div>
+          </div>
+          <div class="px-tab-pane" id="dl-videos">
+            <div class="px-media-card">
+              <div class="px-media-icon">🎬</div>
+              <div class="px-media-info">
+                <div class="px-media-title">Cinematic Listing Video</div>
+                <div class="px-media-desc">2:14 · Horizontal · 4K · Final Edit</div>
+              </div>
+              <a href="https://vimeo.com/YOUR_LISTING_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+            </div>
+            <div class="px-media-card">
+              <div class="px-media-icon">📱</div>
+              <div class="px-media-info">
+                <div class="px-media-title">Agent Brand Reel</div>
+                <div class="px-media-desc">0:58 · Vertical · 4K · Final Edit</div>
+              </div>
+              <a href="https://vimeo.com/YOUR_REEL_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+            </div>
+          </div>
+          <div class="px-tab-pane" id="dl-raw">
+            <div class="px-media-card">
+              <div class="px-media-icon">📂</div>
+              <div class="px-media-info">
+                <div class="px-media-title">All Raw Footage</div>
+                <div class="px-media-desc">36 clips · 4K · 8.9GB total · Interior, Exterior, Twilight</div>
+              </div>
+              <a href="https://drive.google.com/drive/folders/YOUR_RAW_FOLDER_ID" target="_blank" class="px-dl-btn">⬇ Download All</a>
+            </div>
+            <div class="px-included">
+              <div class="px-included-label">Folders included</div>
+              <div class="px-included-item">Interior Walk · 18 clips · 4.2GB</div>
+              <div class="px-included-item">Exterior and Aerial · 11 clips · 2.8GB</div>
+              <div class="px-included-item">Twilight · 7 clips · 1.9GB</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHOTOS SCREEN -->
+        <div class="px-screen" id="px-photos">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="px-media-card" onclick="pxOpenListing()" style="cursor:pointer;">
+              <div class="px-media-icon">📁</div>
+              <div class="px-media-info"><div class="px-media-title">142 Maple Ridge Dr.</div><div class="px-media-desc">28 photos · Mar 18, 2026 · Full Resolution</div></div>
+              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn" onclick="event.stopPropagation()">⬇ Download All</a>
+            </div>
+            <div class="px-media-card" onclick="pxOpenListing()" style="cursor:pointer;">
+              <div class="px-media-icon">📁</div>
+              <div class="px-media-info"><div class="px-media-title">87 Clearwater Blvd.</div><div class="px-media-desc">32 photos · Feb 28, 2026 · Full Resolution</div></div>
+              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn" onclick="event.stopPropagation()">⬇ Download All</a>
+            </div>
+            <div class="px-media-card" onclick="pxOpenListing()" style="cursor:pointer;">
+              <div class="px-media-icon">📁</div>
+              <div class="px-media-info"><div class="px-media-title">304 Elmwood Court</div><div class="px-media-desc">24 photos · Jan 14, 2026 · Full Resolution</div></div>
+              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn" onclick="event.stopPropagation()">⬇ Download All</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIDEOS SCREEN -->
+        <div class="px-screen" id="px-videos">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="px-media-card">
+              <div class="px-media-icon">🎬</div>
+              <div class="px-media-info"><div class="px-media-title">142 Maple Ridge Dr. — Listing Video</div><div class="px-media-desc">2:14 · Horizontal · 4K · Mar 2026</div></div>
+              <a href="https://vimeo.com/YOUR_LISTING_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+            </div>
+            <div class="px-media-card">
+              <div class="px-media-icon">📱</div>
+              <div class="px-media-info"><div class="px-media-title">142 Maple Ridge Dr. — Brand Reel</div><div class="px-media-desc">0:58 · Vertical · 4K · Mar 2026</div></div>
+              <a href="https://vimeo.com/YOUR_REEL_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+            </div>
+            <div class="px-media-card">
+              <div class="px-media-icon">🎬</div>
+              <div class="px-media-info"><div class="px-media-title">87 Clearwater Blvd. — Listing Video</div><div class="px-media-desc">2:08 · Horizontal · 4K · Feb 2026</div></div>
+              <a href="https://vimeo.com/YOUR_LISTING_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+            </div>
+            <div class="px-media-card">
+              <div class="px-media-icon">📱</div>
+              <div class="px-media-info"><div class="px-media-title">87 Clearwater Blvd. — Brand Reel</div><div class="px-media-desc">0:52 · Vertical · 4K · Feb 2026</div></div>
+              <a href="https://vimeo.com/YOUR_REEL_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div><!-- end portal-dash -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── PAGE NAVIGATION ──────────────────────────────────────────
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  var pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  window.scrollTo(0,0);
+  var isPortal=(id==='portal-login'||id==='portal-dash');
+  var nav=document.getElementById('mainNav');
+  if(nav)nav.style.display=isPortal?'none':'flex';
+}
+
+// ── SERVICES CAROUSEL ────────────────────────────────────────
+(function(){
+  var track=document.getElementById('svcTrack');
+  var dotsWrap=document.getElementById('svcDots');
+  if(!track||!dotsWrap)return;
+  var slides=track.querySelectorAll('.svc-slide');
+  var cur=0;
+  slides.forEach(function(_,i){
+    var d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.onclick=function(){goTo(i);};
+    dotsWrap.appendChild(d);
+  });
+  function goTo(n){
+    cur=(n+slides.length)%slides.length;
+    track.style.transform='translateX(-'+(cur*100)+'%)';
+    dotsWrap.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('active',i===cur);});
+  }
+  document.getElementById('svcPrev').onclick=function(){goTo(cur-1);};
+  document.getElementById('svcNext').onclick=function(){goTo(cur+1);};
+})();
+
+// ── PORTAL ───────────────────────────────────────────────────
+function portalSignIn(){
+  go('portal-dash');
+  pxScreen('overview','Overview','Your Media Library');
+}
+function portalSignOut(){go('portal-login');}
+
+function pxScreen(id,title,sub){
+  document.querySelectorAll('.px-screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.px-nav-item').forEach(function(n){n.classList.remove('active');});
+  var screen=document.getElementById('px-'+id);
+  if(screen)screen.classList.add('active');
+  var navItem=document.getElementById('nav-'+id);
+  if(navItem)navItem.classList.add('active');
+  document.getElementById('pxTitle').textContent=title||'';
+  document.getElementById('pxSub').textContent=sub||'';
+}
+
+function pxOpenListing(){
+  pxScreen('listing-detail','142 Maple Ridge Dr.','Full Bundle · Delivered March 18, 2026');
+}
+
+function pxTab(id,el){
+  document.querySelectorAll('.px-tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.px-tab').forEach(function(t){t.classList.remove('active');});
+  var pane=document.getElementById(id);
+  if(pane)pane.classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+function showScreen(id){
+  document.querySelectorAll('#page-portal-dash .screen').forEach(function(s){s.classList.remove('active');});
+  var el=document.getElementById('screen-'+id);
+  if(el)el.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='analytics')setTimeout(function(){drawChart('lineChart');},100);
+}
+
+function filterMedia(status,btn){
+  document.querySelectorAll('#mediaRows .list-row').forEach(function(r){
+    r.style.display=(status==='all'||r.dataset.status===status)?'flex':'none';
+  });
+  document.querySelectorAll('#screen-media .filt-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+function switchTab(tab,el){
+  document.querySelectorAll('#screen-listing .tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('#screen-listing .tab-pane').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+function setPlatform(p){
+  document.getElementById('platIG').classList.toggle('active',p==='ig');
+  document.getElementById('platZillow').classList.toggle('active',p==='zillow');
+  document.getElementById('ig-view').style.display=p==='ig'?'block':'none';
+  document.getElementById('zillow-view').style.display=p==='zillow'?'block':'none';
+  if(p==='ig')setTimeout(function(){drawChart('lineChart');},100);
+}
+
+function drawChart(id){
+  var c=document.getElementById(id);
+  if(!c)return;
+  c.width=c.offsetWidth||300;c.height=100;
+  var ctx=c.getContext('2d'),pts=[20,35,28,55,48,72,60,88,74,92,84,98];
+  var w=c.width,h=c.height,pad=10,max=Math.max.apply(null,pts);
+  var xs=(w-pad*2)/(pts.length-1);
+  ctx.clearRect(0,0,w,h);
+  var g=ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,'rgba(255,255,255,0.08)');g.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath();
+  pts.forEach(function(v,i){var x=pad+i*xs,y=h-pad-(v/max)*(h-pad*2);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo(pad+(pts.length-1)*xs,h);ctx.lineTo(pad,h);ctx.closePath();
+  ctx.fillStyle=g;ctx.fill();
+  ctx.beginPath();
+  pts.forEach(function(v,i){var x=pad+i*xs,y=h-pad-(v/max)*(h-pad*2);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+function pickPkg(card){
+  document.querySelectorAll('.pkg-card').forEach(function(c){c.classList.remove('sel');c.querySelector('.pkg-radio').classList.remove('chk');});
+  card.classList.add('sel');card.querySelector('.pkg-radio').classList.add('chk');
+}
+
+var curStep=1;
+function bookStep(n){
+  document.getElementById('bp'+curStep).classList.remove('active');
+  for(var i=1;i<=4;i++){
+    var c=document.getElementById('s'+i+'c'),l=document.getElementById('s'+i+'l');
+    if(i<n){c.classList.add('done');c.classList.remove('active');c.innerHTML='✓';l.classList.remove('active');}
+    else if(i===n){c.classList.add('active');c.classList.remove('done');l.classList.add('active');}
+    else{c.classList.remove('active','done');l.classList.remove('active');}
+  }
+  curStep=n;document.getElementById('bp'+n).classList.add('active');
+}
+
+function bookConfirm(){
+  document.getElementById('bp4').classList.remove('active');
+  document.getElementById('bp-success').classList.add('active');
+  for(var i=1;i<=4;i++){var c=document.getElementById('s'+i+'c');c.classList.add('done');c.classList.remove('active');c.innerHTML='✓';}
+}
+
+// Build calendar
+(function(){
+  var dg=document.getElementById('dateGrid');
+  if(!dg)return;
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){var h=document.createElement('div');h.className='date-cell hdr';h.textContent=d;dg.appendChild(h);});
+  for(var i=0;i<3;i++){var e=document.createElement('div');e.className='date-cell dis';dg.appendChild(e);}
+  for(var d=1;d<=30;d++){
+    var e=document.createElement('div');
+    e.className='date-cell'+(d<=1?' dis':'')+(d===12?' sel':'');
+    e.textContent=d;
+    if(d>1)(function(el){el.onclick=function(){document.querySelectorAll('#dateGrid .date-cell').forEach(function(x){x.classList.remove('sel');});el.classList.add('sel');};})(e);
+    dg.appendChild(e);
+  }
+  var ts=document.getElementById('timeSlots');
+  if(!ts)return;
+  ['8:00 AM','9:00 AM','10:00 AM','11:00 AM','1:00 PM','2:00 PM','3:00 PM','4:30 PM','5:00 PM'].forEach(function(t,i){
+    var e=document.createElement('div');
+    e.className='time-slot'+(i===7?' sel':'')+(i===3||i===6?' unavail':'');
+    e.textContent=t;
+    if(!e.classList.contains('unavail'))(function(el){el.onclick=function(){document.querySelectorAll('#timeSlots .time-slot').forEach(function(x){x.classList.remove('sel');});el.classList.add('sel');};})(e);
+    ts.appendChild(e);
+  });
+})();
+
+function selectBookPkg(el,pkg){
+  document.querySelectorAll('.book-pkg-opt').forEach(function(c){
+    c.style.borderColor='rgba(255,255,255,0.07)';
+    c.querySelector('.pkg-check').innerHTML='';
+    c.querySelector('.pkg-check').style.background='transparent';
+  });
+  el.style.borderColor='rgba(255,255,255,0.4)';
+  var chk=el.querySelector('.pkg-check');
+  chk.style.background='var(--white)';
+  chk.innerHTML='<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var btn=document.getElementById('bookNowBtn');
+  if(btn)btn.textContent='Schedule My Free Call \u2014 '+pkg+' \u2192';
+}
+</script>
+</body>
+</html>
