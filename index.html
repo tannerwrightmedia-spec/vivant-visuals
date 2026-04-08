@@ -352,7 +352,7 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
     </video>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.7) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;">
-      <h1 id="heroTitle" style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;color:var(--white);line-height:1.0;margin-bottom:24px;max-width:800px;">Premium<br>Real Estate<br><span style="color:rgba(255,255,255,0.3);">Media.</span></h1>
+      <h1 id="heroTitle" style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;color:var(--white);line-height:1.0;margin-bottom:24px;max-width:800px;">Premium<br>Real Estate<br>Media.</h1>
       <p id="heroDesc" style="color:rgba(255,255,255,0.5);font-size:1.05rem;font-weight:300;max-width:440px;line-height:1.7;margin-bottom:36px;">Listing media that sells the home — and builds the agent.</p>
       <button id="heroCta" class="btn" onclick="go('book')">Book Now</button>
     </div>
@@ -2274,7 +2274,7 @@ async function loadSiteContent() {
       var heroSub = document.getElementById('heroSub');
       var heroDesc = document.getElementById('heroDesc');
       var heroCta = document.getElementById('heroCta');
-      if (heroTitle && hc.title) heroTitle.innerHTML = hc.title.replace(/Media\./g, '<span style="color:rgba(255,255,255,0.3);">Media.</span>').replace(/\n/g, '<br>');
+     if (heroTitle && hc.title) heroTitle.innerHTML = hc.title.replace(/\n/g, '<br>');
       if (heroSub && hc.subtitle) heroSub.textContent = hc.subtitle;
       if (heroDesc && hc.description) heroDesc.textContent = hc.description;
       if (heroCta && hc.cta_text) heroCta.textContent = hc.cta_text;
