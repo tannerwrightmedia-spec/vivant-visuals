@@ -349,9 +349,9 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
   <section style="background:var(--black);padding:80px 6vw 60px;position:relative;overflow:hidden;">
     <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0d0d0d 0%,#1a1a1a 100%);z-index:0;"></div>
     <div style="position:relative;z-index:1;">
-      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;color:var(--white);line-height:1.0;margin-bottom:24px;max-width:800px;">Premium<br>Real Estate<br><span style="color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.5);">Media.</span></h1>
-      <p style="color:rgba(255,255,255,0.5);font-size:1.05rem;font-weight:300;max-width:440px;line-height:1.7;margin-bottom:36px;">Listing media that sells the home — and builds the agent.</p>
-      <button class="btn" onclick="go('book')">Book Now</button>
+      <h1 id="heroTitle" style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;color:var(--white);line-height:1.0;margin-bottom:24px;max-width:800px;">Premium<br>Real Estate<br><span style="color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.5);">Media.</span></h1>
+      <p id="heroDesc" style="color:rgba(255,255,255,0.5);font-size:1.05rem;font-weight:300;max-width:440px;line-height:1.7;margin-bottom:36px;">Listing media that sells the home — and builds the agent.</p>
+      <button id="heroCta" class="btn" onclick="go('book')">Book Now</button>
     </div>
   </section>
 
@@ -1223,6 +1223,226 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
   </div>
 </div><!-- end portal-dash -->
 
+<!-- ════════════════ ADMIN CMS ════════════════ -->
+<style>
+/* ── ADMIN CMS ────────────────────────────────── */
+.ax-wrap{display:flex;min-height:100vh;background:#080808;}
+.ax-side{width:260px;flex-shrink:0;background:#0a0a0a;border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;}
+.ax-side-brand{padding:32px 28px 28px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.ax-side-brand h2{font-family:'Playfair Display',serif;font-size:0.95rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
+.ax-side-brand span{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.2);}
+.ax-nav{flex:1;padding:20px 0;}
+.ax-nav-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);padding:0 28px;margin-bottom:8px;}
+.ax-nav-item{display:flex;align-items:center;gap:12px;padding:11px 20px;margin:0 8px 2px;border-radius:6px;cursor:pointer;transition:background 0.15s;font-size:0.8rem;color:rgba(255,255,255,0.4);}
+.ax-nav-item:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);}
+.ax-nav-item.active{background:rgba(255,255,255,0.08);color:var(--white);font-weight:500;}
+.ax-nav-icon{width:18px;text-align:center;font-size:0.85rem;opacity:0.5;}
+.ax-nav-item.active .ax-nav-icon,.ax-nav-item:hover .ax-nav-icon{opacity:1;}
+.ax-side-foot{padding:20px 28px;border-top:1px solid rgba(255,255,255,0.06);}
+.ax-main{flex:1;margin-left:260px;min-height:100vh;}
+.ax-topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 36px;border-bottom:1px solid rgba(255,255,255,0.06);background:#080808;position:sticky;top:0;z-index:100;}
+.ax-topbar h1{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);font-weight:600;}
+.ax-topbar p{font-size:0.75rem;color:rgba(255,255,255,0.25);margin-top:2px;}
+.ax-body{padding:36px;}
+.ax-screen{display:none;}
+.ax-screen.active{display:block;}
+
+/* Cards / Editors */
+.ax-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:28px;margin-bottom:16px;}
+.ax-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.ax-card-title{font-size:0.9rem;color:var(--white);font-weight:600;}
+.ax-card-badge{font-size:0.62rem;letter-spacing:0.08em;padding:3px 9px;border-radius:4px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.07);}
+.ax-field{margin-bottom:16px;}
+.ax-field label{display:block;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:8px;}
+.ax-field input,.ax-field textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:5px;padding:12px 14px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.85rem;outline:none;transition:border-color 0.2s;resize:vertical;}
+.ax-field input:focus,.ax-field textarea:focus{border-color:rgba(255,255,255,0.35);}
+.ax-field textarea{min-height:80px;line-height:1.6;}
+.ax-btn{background:var(--white);color:var(--black);padding:11px 28px;border-radius:5px;font-weight:700;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;}
+.ax-btn:hover{background:#e0e0e0;transform:translateY(-1px);}
+.ax-btn-out{background:transparent;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.15);padding:10px 24px;border-radius:5px;font-weight:600;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.ax-btn-out:hover{border-color:rgba(255,255,255,0.4);color:var(--white);}
+.ax-btn-danger{background:transparent;color:rgba(255,100,100,0.6);border:1px solid rgba(255,100,100,0.2);padding:10px 24px;border-radius:5px;font-weight:600;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.ax-btn-danger:hover{border-color:rgba(255,100,100,0.5);color:rgba(255,100,100,0.9);}
+
+/* Image preview */
+.ax-img-preview{width:100%;max-width:400px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:12px;position:relative;}
+.ax-img-preview img{width:100%;height:100%;object-fit:cover;}
+.ax-img-placeholder{color:rgba(255,255,255,0.15);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;}
+.ax-upload-area{position:relative;display:inline-block;}
+.ax-upload-area input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+
+/* Slide list */
+.ax-slide-row{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.ax-slide-row:last-child{border-bottom:none;}
+.ax-slide-thumb{width:80px;height:50px;border-radius:6px;overflow:hidden;background:rgba(255,255,255,0.04);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.ax-slide-thumb img{width:100%;height:100%;object-fit:cover;}
+.ax-slide-info{flex:1;min-width:0;}
+.ax-slide-name{font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:2px;}
+.ax-slide-desc{font-size:0.75rem;color:rgba(255,255,255,0.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ax-slide-actions{display:flex;gap:8px;}
+
+/* Toast */
+.ax-toast{position:fixed;bottom:32px;right:32px;background:var(--white);color:var(--black);padding:14px 28px;border-radius:8px;font-size:0.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;}
+.ax-toast.show{opacity:1;transform:translateY(0);}
+
+/* Responsive */
+@media(max-width:768px){
+  .ax-side{width:100%;position:relative;height:auto;border-right:none;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .ax-nav{display:flex;padding:10px;overflow-x:auto;gap:4px;}
+  .ax-nav-label{display:none;}
+  .ax-nav-item{white-space:nowrap;margin:0;padding:9px 14px;font-size:0.72rem;}
+  .ax-main{margin-left:0;}
+  .ax-wrap{flex-direction:column;}
+  .ax-side-foot{display:none;}
+  .ax-side .ax-side-brand{padding:20px 20px 12px;}
+}
+</style>
+
+<div id="page-admin" class="page">
+  <div class="ax-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="ax-side">
+      <div class="ax-side-brand">
+        <h2>Vivant Visuals</h2>
+        <span>Content Manager</span>
+      </div>
+      <nav class="ax-nav">
+        <div class="ax-nav-label" style="margin-top:8px;">Content</div>
+        <div class="ax-nav-item active" data-ax="carousel" onclick="axScreen('carousel')">
+          <span class="ax-nav-icon">🎠</span> Carousel
+        </div>
+        <div class="ax-nav-item" data-ax="hero" onclick="axScreen('hero')">
+          <span class="ax-nav-icon">✦</span> Hero Section
+        </div>
+        <div class="ax-nav-label" style="margin-top:16px;">Media</div>
+        <div class="ax-nav-item" data-ax="media" onclick="axScreen('media')">
+          <span class="ax-nav-icon">📁</span> Image Library
+        </div>
+      </nav>
+      <div class="ax-side-foot">
+        <button class="px-signout" onclick="axSignOut()">Sign Out</button>
+        <div style="margin-top:12px;"><button class="ax-btn-out" style="padding:8px 16px;font-size:0.65rem;" onclick="go('home')">← View Site</button></div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="ax-main">
+      <div class="ax-topbar">
+        <div>
+          <h1 id="axTitle">Carousel Slides</h1>
+          <p id="axSub">Manage images and text for the services carousel</p>
+        </div>
+      </div>
+      <div class="ax-body">
+
+        <!-- CAROUSEL SCREEN -->
+        <div class="ax-screen active" id="ax-carousel">
+          <div id="axSlideList"></div>
+        </div>
+
+        <!-- CAROUSEL EDIT SCREEN -->
+        <div class="ax-screen" id="ax-carousel-edit">
+          <button class="ax-btn-out" style="margin-bottom:24px;padding:8px 16px;font-size:0.68rem;" onclick="axScreen('carousel')">← Back to All Slides</button>
+          <div class="ax-card">
+            <div class="ax-card-head">
+              <div class="ax-card-title" id="axEditTitle">Edit Slide</div>
+              <span class="ax-card-badge" id="axEditBadge">slide</span>
+            </div>
+            <div class="ax-field">
+              <label>Background Image</label>
+              <div class="ax-img-preview" id="axEditPreview">
+                <span class="ax-img-placeholder">No image set</span>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div class="ax-upload-area">
+                  <button class="ax-btn-out" style="padding:8px 16px;font-size:0.68rem;">Upload Image</button>
+                  <input type="file" accept="image/*" onchange="axUploadImage(this)"/>
+                </div>
+                <span style="font-size:0.68rem;color:rgba(255,255,255,0.2);">or paste URL below</span>
+              </div>
+            </div>
+            <div class="ax-field">
+              <label>Image URL</label>
+              <input type="text" id="axEditImageUrl" placeholder="https://...supabase.co/storage/v1/object/public/website-images/..."/>
+            </div>
+            <div class="ax-field">
+              <label>Icon (emoji)</label>
+              <input type="text" id="axEditIcon" placeholder="📷" style="max-width:80px;"/>
+            </div>
+            <div class="ax-field">
+              <label>Title</label>
+              <input type="text" id="axEditSlideTitle" placeholder="e.g. Photos"/>
+            </div>
+            <div class="ax-field">
+              <label>Description</label>
+              <textarea id="axEditDesc" placeholder="Service description..."></textarea>
+            </div>
+            <div class="ax-field">
+              <label>Stat Line (supports &lt;strong&gt; tags)</label>
+              <input type="text" id="axEditStat" placeholder="e.g. Listings with pro photos generate &lt;strong&gt;4x more inquiries.&lt;/strong&gt;"/>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:24px;">
+              <button class="ax-btn" onclick="axSaveSlide()">Save Changes</button>
+              <button class="ax-btn-out" onclick="axScreen('carousel')">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- HERO SCREEN -->
+        <div class="ax-screen" id="ax-hero">
+          <div class="ax-card">
+            <div class="ax-card-head">
+              <div class="ax-card-title">Hero Section</div>
+              <span class="ax-card-badge">homepage</span>
+            </div>
+            <div class="ax-field">
+              <label>Subtitle / Label</label>
+              <input type="text" id="axHeroSubtitle" placeholder="Vivant Visuals"/>
+            </div>
+            <div class="ax-field">
+              <label>Headline</label>
+              <input type="text" id="axHeroTitle" placeholder="Listing Media That Sells"/>
+            </div>
+            <div class="ax-field">
+              <label>Description</label>
+              <textarea id="axHeroDesc" placeholder="Professional photography, cinematic video..."></textarea>
+            </div>
+            <div class="ax-field">
+              <label>Button Text</label>
+              <input type="text" id="axHeroCta" placeholder="Book Now" style="max-width:200px;"/>
+            </div>
+            <div style="margin-top:24px;">
+              <button class="ax-btn" onclick="axSaveHero()">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEDIA LIBRARY SCREEN -->
+        <div class="ax-screen" id="ax-media">
+          <div class="ax-card">
+            <div class="ax-card-head">
+              <div class="ax-card-title">Upload to Image Library</div>
+              <span class="ax-card-badge">website-images bucket</span>
+            </div>
+            <p style="font-size:0.78rem;color:rgba(255,255,255,0.3);margin-bottom:16px;">Upload images to your Supabase Storage. Once uploaded, use the URL in carousel slides or other sections.</p>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:24px;">
+              <div class="ax-upload-area">
+                <button class="ax-btn">Upload Image</button>
+                <input type="file" accept="image/*" onchange="axUploadToLibrary(this)"/>
+              </div>
+              <span id="axLibUploadStatus" style="font-size:0.75rem;color:rgba(255,255,255,0.3);"></span>
+            </div>
+            <div id="axMediaGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="ax-toast" id="axToast"></div>
+</div><!-- end admin -->
+
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── PAGE NAVIGATION ──────────────────────────────────────────
 function go(id){
@@ -1230,7 +1450,7 @@ function go(id){
   var pg=document.getElementById('page-'+id);
   if(pg)pg.classList.add('active');
   window.scrollTo(0,0);
-  var isPortal=(id==='portal-login'||id==='portal-dash');
+  var isPortal=(id==='portal-login'||id==='portal-dash'||id==='admin');
   var nav=document.getElementById('mainNav');
   if(nav)nav.style.display=isPortal?'none':'flex';
 }
@@ -1627,6 +1847,440 @@ function selectBookPkg(el,pkg){
   var btn=document.getElementById('bookNowBtn');
   if(btn)btn.textContent='Schedule My Free Call \u2014 '+pkg+' \u2192';
 }
+
+// ══════════════════════════════════════════════════════════════
+// ── ADMIN CMS ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+var axSlides = [];
+var axEditingKey = null;
+var axHeroData = {};
+
+// ── Admin Auth ───────────────────────────────────────────────
+async function axLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPw').value.trim();
+  if (!email || !password) return;
+
+  var data = await supaAuth(email, password);
+  if (data.error || !data.access_token) return;
+
+  currentSession = data;
+  supaHeaders['Authorization'] = 'Bearer ' + data.access_token;
+
+  // Check if user is admin
+  var agents = await supaFetch('/rest/v1/agents?id=eq.' + data.user.id + '&select=role');
+  if (agents && agents[0] && agents[0].role === 'admin') {
+    go('admin');
+    axLoadAll();
+  }
+}
+
+// Hook into the existing sign-in to detect admin
+var _origSignIn = portalSignIn;
+portalSignIn = async function() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPw').value.trim();
+  var btn = document.querySelector('.px-signin-btn');
+
+  if (!email || !password) { pxLoginError('Please enter your email and password.'); return; }
+
+  btn.textContent = 'Signing in…';
+  btn.disabled = true;
+
+  try {
+    var data = await supaAuth(email, password);
+    if (data.error || !data.access_token) {
+      btn.textContent = 'Sign In →';
+      btn.disabled = false;
+      pxLoginError(data.error_description || 'Invalid email or password.');
+      return;
+    }
+
+    currentSession = data;
+    supaHeaders['Authorization'] = 'Bearer ' + data.access_token;
+
+    // Check admin role
+    var agents = await supaFetch('/rest/v1/agents?id=eq.' + data.user.id + '&select=*');
+    var agent = agents[0] || {name: email.split('@')[0], email: email, brokerage: '', role: 'agent'};
+    currentAgent = agent;
+
+    if (agent.role === 'admin') {
+      go('admin');
+      axLoadAll();
+      btn.textContent = 'Sign In →';
+      btn.disabled = false;
+      return;
+    }
+
+    // Regular agent flow
+    var listings = await supaFetch('/rest/v1/listings?agent_id=eq.' + data.user.id + '&select=*&order=delivered_at.desc');
+    currentListings = listings || [];
+    go('portal-dash');
+    pxRenderDashboard();
+    pxScreen('overview', 'Overview', 'Your Media Library');
+    btn.textContent = 'Sign In →';
+    btn.disabled = false;
+
+  } catch(e) {
+    btn.textContent = 'Sign In →';
+    btn.disabled = false;
+    pxLoginError('Something went wrong. Please try again.');
+  }
+};
+
+function axSignOut() {
+  if (currentSession) supaSignOut(currentSession.access_token);
+  currentSession = null;
+  currentAgent = null;
+  supaHeaders['Authorization'] = 'Bearer ' + SUPA_KEY;
+  go('portal-login');
+}
+
+// ── Load All CMS Data ────────────────────────────────────────
+async function axLoadAll() {
+  var content = await supaFetch('/rest/v1/site_content?select=*&order=sort_order.asc');
+  axSlides = (content || []).filter(function(c) { return c.section === 'carousel'; });
+  var heroArr = (content || []).filter(function(c) { return c.section === 'hero'; });
+  axHeroData = heroArr[0] || { section: 'hero', item_key: 'main', content: {} };
+  axRenderSlideList();
+  axRenderHero();
+  axLoadMediaLibrary();
+}
+
+// ── Screen Navigation ────────────────────────────────────────
+function axScreen(id) {
+  document.querySelectorAll('.ax-screen').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.ax-nav-item').forEach(function(n) { n.classList.remove('active'); });
+  var screen = document.getElementById('ax-' + id);
+  if (screen) screen.classList.add('active');
+  var navItem = document.querySelector('.ax-nav-item[data-ax="' + id + '"]');
+  if (!navItem && id === 'carousel-edit') navItem = document.querySelector('.ax-nav-item[data-ax="carousel"]');
+  if (navItem) navItem.classList.add('active');
+
+  var titles = {
+    'carousel': ['Carousel Slides', 'Manage images and text for the services carousel'],
+    'carousel-edit': ['Edit Slide', 'Update slide content and image'],
+    'hero': ['Hero Section', 'Edit the homepage hero banner'],
+    'media': ['Image Library', 'Upload and manage images']
+  };
+  var t = titles[id] || ['Content Manager', ''];
+  document.getElementById('axTitle').textContent = t[0];
+  document.getElementById('axSub').textContent = t[1];
+}
+
+// ── Render Slide List ────────────────────────────────────────
+function axRenderSlideList() {
+  var wrap = document.getElementById('axSlideList');
+  if (!wrap) return;
+
+  if (!axSlides.length) {
+    wrap.innerHTML = '<div class="ax-card"><p style="color:rgba(255,255,255,0.3);font-size:0.85rem;">No carousel slides found. Check your database.</p></div>';
+    return;
+  }
+
+  var html = '<div class="ax-card"><div class="ax-card-head"><div class="ax-card-title">All Slides (' + axSlides.length + ')</div></div>';
+  axSlides.forEach(function(slide) {
+    var c = slide.content || {};
+    var hasImg = c.image_url && c.image_url.length > 0;
+    html += '<div class="ax-slide-row">' +
+      '<div class="ax-slide-thumb">' +
+        (hasImg ? '<img src="' + c.image_url + '" alt="' + (c.title||'') + '"/>' : '<span style="font-size:1.4rem;">' + (c.icon||'📷') + '</span>') +
+      '</div>' +
+      '<div class="ax-slide-info">' +
+        '<div class="ax-slide-name">' + (c.title || slide.item_key) + '</div>' +
+        '<div class="ax-slide-desc">' + (c.description || 'No description') + '</div>' +
+      '</div>' +
+      '<div class="ax-slide-actions">' +
+        '<button class="ax-btn-out" style="padding:7px 14px;font-size:0.65rem;" onclick="axEditSlide(\'' + slide.item_key + '\')">Edit</button>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+// ── Edit Slide ───────────────────────────────────────────────
+function axEditSlide(key) {
+  var slide = axSlides.find(function(s) { return s.item_key === key; });
+  if (!slide) return;
+  axEditingKey = key;
+  var c = slide.content || {};
+
+  document.getElementById('axEditTitle').textContent = 'Edit: ' + (c.title || key);
+  document.getElementById('axEditBadge').textContent = key;
+  document.getElementById('axEditImageUrl').value = c.image_url || '';
+  document.getElementById('axEditIcon').value = c.icon || '';
+  document.getElementById('axEditSlideTitle').value = c.title || '';
+  document.getElementById('axEditDesc').value = c.description || '';
+  document.getElementById('axEditStat').value = c.stat || '';
+
+  var preview = document.getElementById('axEditPreview');
+  if (c.image_url) {
+    preview.innerHTML = '<img src="' + c.image_url + '" alt="preview"/>';
+  } else {
+    preview.innerHTML = '<span class="ax-img-placeholder">No image set</span>';
+  }
+
+  // Update preview when URL changes
+  document.getElementById('axEditImageUrl').oninput = function() {
+    var url = this.value.trim();
+    if (url) {
+      preview.innerHTML = '<img src="' + url + '" alt="preview" onerror="this.parentElement.innerHTML=\'<span class=ax-img-placeholder>Invalid URL</span>\'"/>';
+    } else {
+      preview.innerHTML = '<span class="ax-img-placeholder">No image set</span>';
+    }
+  };
+
+  axScreen('carousel-edit');
+}
+
+// ── Save Slide ───────────────────────────────────────────────
+async function axSaveSlide() {
+  if (!axEditingKey) return;
+  var slide = axSlides.find(function(s) { return s.item_key === axEditingKey; });
+  if (!slide) return;
+
+  var updatedContent = {
+    title: document.getElementById('axEditSlideTitle').value.trim(),
+    description: document.getElementById('axEditDesc').value.trim(),
+    stat: document.getElementById('axEditStat').value.trim(),
+    icon: document.getElementById('axEditIcon').value.trim(),
+    image_url: document.getElementById('axEditImageUrl').value.trim()
+  };
+
+  try {
+    await fetch(SUPA_URL + '/rest/v1/site_content?section=eq.carousel&item_key=eq.' + axEditingKey, {
+      method: 'PATCH',
+      headers: Object.assign({}, supaHeaders, {'Prefer': 'return=minimal'}),
+      body: JSON.stringify({ content: updatedContent, updated_at: new Date().toISOString() })
+    });
+
+    slide.content = updatedContent;
+    axRenderSlideList();
+    axScreen('carousel');
+    axToast('Slide saved successfully');
+  } catch(e) {
+    axToast('Error saving slide');
+  }
+}
+
+// ── Hero Section ─────────────────────────────────────────────
+function axRenderHero() {
+  var c = (axHeroData && axHeroData.content) || {};
+  document.getElementById('axHeroSubtitle').value = c.subtitle || '';
+  document.getElementById('axHeroTitle').value = c.title || '';
+  document.getElementById('axHeroDesc').value = c.description || '';
+  document.getElementById('axHeroCta').value = c.cta_text || '';
+}
+
+async function axSaveHero() {
+  var updatedContent = {
+    subtitle: document.getElementById('axHeroSubtitle').value.trim(),
+    title: document.getElementById('axHeroTitle').value.trim(),
+    description: document.getElementById('axHeroDesc').value.trim(),
+    cta_text: document.getElementById('axHeroCta').value.trim(),
+    cta_link: (axHeroData.content && axHeroData.content.cta_link) || 'book'
+  };
+
+  try {
+    await fetch(SUPA_URL + '/rest/v1/site_content?section=eq.hero&item_key=eq.main', {
+      method: 'PATCH',
+      headers: Object.assign({}, supaHeaders, {'Prefer': 'return=minimal'}),
+      body: JSON.stringify({ content: updatedContent, updated_at: new Date().toISOString() })
+    });
+
+    axHeroData.content = updatedContent;
+    axToast('Hero section saved');
+  } catch(e) {
+    axToast('Error saving hero');
+  }
+}
+
+// ── Image Upload to Supabase Storage ─────────────────────────
+async function axUploadImage(input) {
+  var file = input.files[0];
+  if (!file) return;
+
+  var filename = 'carousel-' + axEditingKey + '-' + Date.now() + '.' + file.name.split('.').pop();
+  var uploadUrl = SUPA_URL + '/storage/v1/object/website-images/' + filename;
+
+  try {
+    var res = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': supaHeaders['Authorization'],
+        'Content-Type': file.type,
+        'x-upsert': 'true'
+      },
+      body: file
+    });
+
+    if (res.ok) {
+      var publicUrl = SUPA_URL + '/storage/v1/object/public/website-images/' + filename;
+      document.getElementById('axEditImageUrl').value = publicUrl;
+      document.getElementById('axEditPreview').innerHTML = '<img src="' + publicUrl + '" alt="preview"/>';
+      axToast('Image uploaded');
+    } else {
+      axToast('Upload failed — check storage permissions');
+    }
+  } catch(e) {
+    axToast('Upload error');
+  }
+  input.value = '';
+}
+
+async function axUploadToLibrary(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var status = document.getElementById('axLibUploadStatus');
+  status.textContent = 'Uploading…';
+
+  var filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '-').toLowerCase();
+  var uploadUrl = SUPA_URL + '/storage/v1/object/website-images/' + filename;
+
+  try {
+    var res = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': supaHeaders['Authorization'],
+        'Content-Type': file.type,
+        'x-upsert': 'true'
+      },
+      body: file
+    });
+
+    if (res.ok) {
+      status.textContent = 'Uploaded!';
+      axToast('Image uploaded to library');
+      axLoadMediaLibrary();
+    } else {
+      status.textContent = 'Failed — check permissions';
+    }
+  } catch(e) {
+    status.textContent = 'Error uploading';
+  }
+  input.value = '';
+  setTimeout(function() { status.textContent = ''; }, 3000);
+}
+
+async function axLoadMediaLibrary() {
+  var grid = document.getElementById('axMediaGrid');
+  if (!grid) return;
+
+  try {
+    var res = await fetch(SUPA_URL + '/storage/v1/object/list/website-images', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': supaHeaders['Authorization'],
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prefix: '', limit: 100, offset: 0, sortBy: { column: 'created_at', order: 'desc' } })
+    });
+    var files = await res.json();
+
+    if (!files || !files.length) {
+      grid.innerHTML = '<p style="color:rgba(255,255,255,0.2);font-size:0.82rem;">No images uploaded yet.</p>';
+      return;
+    }
+
+    grid.innerHTML = files.filter(function(f) { return f.name && !f.name.startsWith('.'); }).map(function(f) {
+      var url = SUPA_URL + '/storage/v1/object/public/website-images/' + f.name;
+      return '<div style="border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.03);">' +
+        '<div style="aspect-ratio:16/10;overflow:hidden;"><img src="' + url + '" style="width:100%;height:100%;object-fit:cover;display:block;" alt="' + f.name + '"/></div>' +
+        '<div style="padding:10px;">' +
+          '<div style="font-size:0.72rem;color:var(--white);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;">' + f.name + '</div>' +
+          '<button onclick="axCopyUrl(\'' + url + '\')" style="background:none;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);font-size:0.62rem;padding:4px 8px;border-radius:3px;cursor:pointer;">Copy URL</button>' +
+        '</div></div>';
+    }).join('');
+  } catch(e) {
+    grid.innerHTML = '<p style="color:rgba(255,255,255,0.2);font-size:0.82rem;">Could not load images.</p>';
+  }
+}
+
+function axCopyUrl(url) {
+  navigator.clipboard.writeText(url).then(function() { axToast('URL copied to clipboard'); });
+}
+
+// ── Toast Notification ───────────────────────────────────────
+function axToast(msg) {
+  var t = document.getElementById('axToast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// ── Load Site Content on Homepage ────────────────────────────
+async function loadSiteContent() {
+  try {
+    var content = await fetch(SUPA_URL + '/rest/v1/site_content?select=*&order=sort_order.asc', {
+      headers: {'apikey': SUPA_KEY, 'Content-Type': 'application/json'}
+    });
+    var items = await content.json();
+    if (!items || !items.length) return;
+
+    // Update carousel slides
+    var slides = items.filter(function(i) { return i.section === 'carousel'; });
+    var track = document.getElementById('svcTrack');
+    if (track && slides.length) {
+      track.innerHTML = slides.map(function(s) {
+        var c = s.content || {};
+        var bgStyle = c.image_url ? "background-image:url('" + c.image_url + "')" : '';
+        return '<div class="svc-slide"><div class="svc-card" style="' + bgStyle + '"><div class="svc-card-inner">' +
+          '<div class="svc-icon">' + (c.icon || '') + '</div>' +
+          '<h3 class="svc-title">' + (c.title || '') + '</h3>' +
+          '<p class="svc-desc">' + (c.description || '') + '</p>' +
+          '<div class="svc-stat">' + (c.stat || '') + '</div>' +
+        '</div></div></div>';
+      }).join('');
+
+      // Rebuild carousel dots
+      var dotsWrap = document.getElementById('svcDots');
+      if (dotsWrap) {
+        dotsWrap.innerHTML = '';
+        var newSlides = track.querySelectorAll('.svc-slide');
+        var cur = 0;
+        newSlides.forEach(function(_, i) {
+          var d = document.createElement('div');
+          d.className = 'dot' + (i === 0 ? ' active' : '');
+          d.onclick = function() {
+            cur = i;
+            track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+            dotsWrap.querySelectorAll('.dot').forEach(function(dot, j) { dot.classList.toggle('active', j === cur); });
+          };
+          dotsWrap.appendChild(d);
+        });
+        function svcGoTo(n) {
+          cur = (n + newSlides.length) % newSlides.length;
+          track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+          dotsWrap.querySelectorAll('.dot').forEach(function(dot, j) { dot.classList.toggle('active', j === cur); });
+        }
+        document.getElementById('svcPrev').onclick = function() { svcGoTo(cur - 1); };
+        document.getElementById('svcNext').onclick = function() { svcGoTo(cur + 1); };
+      }
+    }
+
+    // Update hero section
+    var hero = items.find(function(i) { return i.section === 'hero' && i.item_key === 'main'; });
+    if (hero && hero.content) {
+      var hc = hero.content;
+      var heroTitle = document.getElementById('heroTitle');
+      var heroSub = document.getElementById('heroSub');
+      var heroDesc = document.getElementById('heroDesc');
+      var heroCta = document.getElementById('heroCta');
+      if (heroTitle && hc.title) heroTitle.textContent = hc.title;
+      if (heroSub && hc.subtitle) heroSub.textContent = hc.subtitle;
+      if (heroDesc && hc.description) heroDesc.textContent = hc.description;
+      if (heroCta && hc.cta_text) heroCta.textContent = hc.cta_text;
+    }
+  } catch(e) { /* silently fail — use static content as fallback */ }
+}
+
+// Load site content when page loads
+loadSiteContent();
 </script>
 </body>
 </html>
