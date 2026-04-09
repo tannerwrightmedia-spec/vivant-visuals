@@ -1947,58 +1947,7 @@ async function axLogin() {
   }
 }
 
-// Hook into the existing sign-in to detect admin
-var _origSignIn = portalSignIn;
-portalSignIn = async function() {
-  var email = document.getElementById('loginEmail').value.trim();
-  var password = document.getElementById('loginPw').value.trim();
-  var btn = document.querySelector('.px-signin-btn');
-
-  if (!email || !password) { pxLoginError('Please enter your email and password.'); return; }
-
-  btn.textContent = 'Signing in…';
-  btn.disabled = true;
-
-  try {
-    var data = await supaAuth(email, password);
-    if (data.error || !data.access_token) {
-      btn.textContent = 'Sign In →';
-      btn.disabled = false;
-      pxLoginError(data.error_description || 'Invalid email or password.');
-      return;
-    }
-
-    currentSession = data;
-    supaHeaders['Authorization'] = 'Bearer ' + data.access_token;
-
-    // Check admin role
-    var agents = await supaFetch('/rest/v1/agents?id=eq.' + data.user.id + '&select=*');
-    var agent = agents[0] || {name: email.split('@')[0], email: email, brokerage: '', role: 'agent'};
-    currentAgent = agent;
-
-    if (agent.role === 'admin') {
-      go('admin');
-      axLoadAll();
-      btn.textContent = 'Sign In →';
-      btn.disabled = false;
-      return;
-    }
-
-    // Regular agent flow
-    var listings = await supaFetch('/rest/v1/listings?agent_id=eq.' + data.user.id + '&select=*&order=delivered_at.desc');
-    currentListings = listings || [];
-    go('portal-dash');
-    pxRenderDashboard();
-    pxScreen('overview', 'Overview', 'Your Media Library');
-    btn.textContent = 'Sign In →';
-    btn.disabled = false;
-
-  } catch(e) {
-    btn.textContent = 'Sign In →';
-    btn.disabled = false;
-    pxLoginError('Something went wrong. Please try again.');
-  }
-};
+// Admin hook disabled — using demo mode (see portalSignIn above)
 
 function axSignOut() {
   if (currentSession) supaSignOut(currentSession.access_token);
