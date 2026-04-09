@@ -1083,14 +1083,7 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
             <span class="px-nav-text">Listings</span>
             <span class="px-nav-badge">3</span>
           </div>
-          <div class="px-nav-item" id="nav-photos" onclick="pxScreen('photos','Photos','All Photos')">
-            <div class="px-nav-icon">📷</div>
-            <span class="px-nav-text">Photos</span>
-          </div>
-          <div class="px-nav-item" id="nav-videos" onclick="pxScreen('videos','Videos','All Videos')">
-            <div class="px-nav-icon">🎬</div>
-            <span class="px-nav-text">Videos</span>
-          </div>
+          <!-- Photos and Videos now live inside each listing -->
         </div>
         <div class="px-nav-section" style="margin-top:20px;">
           <div class="px-nav-label">Account</div>
@@ -1192,110 +1185,54 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
             <div class="px-detail-meta">Full Bundle · Delivered March 18, 2026 · Active</div>
           </div>
           <div class="px-tabs">
-            <div class="px-tab active" onclick="pxTab('dl-photos',this)">Photos</div>
-            <div class="px-tab" onclick="pxTab('dl-videos',this)">Videos</div>
-            <div class="px-tab" onclick="pxTab('dl-raw',this)">Raw Files</div>
+            <div class="px-tab active" onclick="pxTab('dl-mls-photos',this)">MLS Photos</div>
+            <div class="px-tab" onclick="pxTab('dl-print-photos',this)">Print Size Photos</div>
+            <div class="px-tab" onclick="pxTab('dl-finished-videos',this)">Finished Videos</div>
+            <div class="px-tab" onclick="pxTab('dl-social-videos',this)">Social Media Uncut</div>
           </div>
-          <div class="px-tab-pane active" id="dl-photos">
+          <div class="px-tab-pane active" id="dl-mls-photos">
             <div class="px-media-card">
-              <div class="px-media-icon">📁</div>
+              <div class="px-media-icon">📷</div>
               <div class="px-media-info">
-                <div class="px-media-title">All Photos</div>
-                <div class="px-media-desc">28 photos · Interior, Exterior, Detail, Aerial, Twilight · Full Resolution</div>
+                <div class="px-media-title">MLS Photos</div>
+                <div class="px-media-desc">Web-optimized photos ready for MLS upload · Interior, Exterior, Aerial, Twilight</div>
               </div>
-              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn">⬇ Download All</a>
-            </div>
-            <div class="px-included">
-              <div class="px-included-label">What's included</div>
-              <div class="px-included-item">Interior photos — living, kitchen, bedrooms, bathrooms</div>
-              <div class="px-included-item">Exterior and curb appeal shots</div>
-              <div class="px-included-item">Detail and lifestyle shots</div>
-              <div class="px-included-item">Aerial and drone photos</div>
-              <div class="px-included-item">Twilight and golden hour shots</div>
+              <a href="#" target="_blank" class="px-dl-btn">⬇ Download All</a>
             </div>
           </div>
-          <div class="px-tab-pane" id="dl-videos">
+          <div class="px-tab-pane" id="dl-print-photos">
+            <div class="px-media-card">
+              <div class="px-media-icon">🖼️</div>
+              <div class="px-media-info">
+                <div class="px-media-title">Print Size Photos</div>
+                <div class="px-media-desc">Full resolution photos for print materials, flyers, and signage</div>
+              </div>
+              <a href="#" target="_blank" class="px-dl-btn">⬇ Download All</a>
+            </div>
+          </div>
+          <div class="px-tab-pane" id="dl-finished-videos">
             <div class="px-media-card">
               <div class="px-media-icon">🎬</div>
               <div class="px-media-info">
-                <div class="px-media-title">Cinematic Listing Video</div>
-                <div class="px-media-desc">2:14 · Horizontal · 4K · Final Edit</div>
+                <div class="px-media-title">Finished Videos</div>
+                <div class="px-media-desc">Fully edited listing video and agent brand reel · 4K · Final Edit</div>
               </div>
-              <a href="https://vimeo.com/YOUR_LISTING_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
+              <a href="#" target="_blank" class="px-dl-btn">⬇ Download All</a>
             </div>
+          </div>
+          <div class="px-tab-pane" id="dl-social-videos">
             <div class="px-media-card">
               <div class="px-media-icon">📱</div>
               <div class="px-media-info">
-                <div class="px-media-title">Agent Brand Reel</div>
-                <div class="px-media-desc">0:58 · Vertical · 4K · Final Edit</div>
+                <div class="px-media-title">Social Media Uncut Videos</div>
+                <div class="px-media-desc">Raw social-ready clips for Instagram, TikTok, and Reels · Vertical &amp; Horizontal</div>
               </div>
-              <a href="https://vimeo.com/YOUR_REEL_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
-            </div>
-          </div>
-          <div class="px-tab-pane" id="dl-raw">
-            <div class="px-media-card">
-              <div class="px-media-icon">📂</div>
-              <div class="px-media-info">
-                <div class="px-media-title">All Raw Footage</div>
-                <div class="px-media-desc">36 clips · 4K · 8.9GB total · Interior, Exterior, Twilight</div>
-              </div>
-              <a href="https://drive.google.com/drive/folders/YOUR_RAW_FOLDER_ID" target="_blank" class="px-dl-btn">⬇ Download All</a>
-            </div>
-            <div class="px-included">
-              <div class="px-included-label">Folders included</div>
-              <div class="px-included-item">Interior Walk · 18 clips · 4.2GB</div>
-              <div class="px-included-item">Exterior and Aerial · 11 clips · 2.8GB</div>
-              <div class="px-included-item">Twilight · 7 clips · 1.9GB</div>
+              <a href="#" target="_blank" class="px-dl-btn">⬇ Download All</a>
             </div>
           </div>
         </div>
 
-        <!-- PHOTOS SCREEN -->
-        <div class="px-screen" id="px-photos">
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div class="px-media-card" onclick="pxOpenListing()" style="cursor:pointer;">
-              <div class="px-media-icon">📁</div>
-              <div class="px-media-info"><div class="px-media-title">142 Maple Ridge Dr.</div><div class="px-media-desc">28 photos · Mar 18, 2026 · Full Resolution</div></div>
-              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn" onclick="event.stopPropagation()">⬇ Download All</a>
-            </div>
-            <div class="px-media-card" onclick="pxOpenListing()" style="cursor:pointer;">
-              <div class="px-media-icon">📁</div>
-              <div class="px-media-info"><div class="px-media-title">87 Clearwater Blvd.</div><div class="px-media-desc">32 photos · Feb 28, 2026 · Full Resolution</div></div>
-              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn" onclick="event.stopPropagation()">⬇ Download All</a>
-            </div>
-            <div class="px-media-card" onclick="pxOpenListing()" style="cursor:pointer;">
-              <div class="px-media-icon">📁</div>
-              <div class="px-media-info"><div class="px-media-title">304 Elmwood Court</div><div class="px-media-desc">24 photos · Jan 14, 2026 · Full Resolution</div></div>
-              <a href="https://drive.google.com/drive/folders/YOUR_PHOTOS_FOLDER_ID" target="_blank" class="px-dl-btn" onclick="event.stopPropagation()">⬇ Download All</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- VIDEOS SCREEN -->
-        <div class="px-screen" id="px-videos">
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div class="px-media-card">
-              <div class="px-media-icon">🎬</div>
-              <div class="px-media-info"><div class="px-media-title">142 Maple Ridge Dr. — Listing Video</div><div class="px-media-desc">2:14 · Horizontal · 4K · Mar 2026</div></div>
-              <a href="https://vimeo.com/YOUR_LISTING_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
-            </div>
-            <div class="px-media-card">
-              <div class="px-media-icon">📱</div>
-              <div class="px-media-info"><div class="px-media-title">142 Maple Ridge Dr. — Brand Reel</div><div class="px-media-desc">0:58 · Vertical · 4K · Mar 2026</div></div>
-              <a href="https://vimeo.com/YOUR_REEL_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
-            </div>
-            <div class="px-media-card">
-              <div class="px-media-icon">🎬</div>
-              <div class="px-media-info"><div class="px-media-title">87 Clearwater Blvd. — Listing Video</div><div class="px-media-desc">2:08 · Horizontal · 4K · Feb 2026</div></div>
-              <a href="https://vimeo.com/YOUR_LISTING_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
-            </div>
-            <div class="px-media-card">
-              <div class="px-media-icon">📱</div>
-              <div class="px-media-info"><div class="px-media-title">87 Clearwater Blvd. — Brand Reel</div><div class="px-media-desc">0:52 · Vertical · 4K · Feb 2026</div></div>
-              <a href="https://vimeo.com/YOUR_REEL_VIDEO_ID" target="_blank" class="px-dl-btn">⬇ Download</a>
-            </div>
-          </div>
-        </div>
+        <!-- Photos and Videos screens removed — media now lives inside each listing -->
 
       </div>
     </div>
@@ -1718,57 +1655,68 @@ async function pxOpenListing(listingId) {
 }
 
 function pxRenderAssets(assets) {
-  var photos  = assets.filter(function(a){return a.type==='photos';});
-  var videos  = assets.filter(function(a){return a.type==='video';});
-  var reels   = assets.filter(function(a){return a.type==='reel';});
-  var raw     = assets.filter(function(a){return a.type==='raw';});
-  var floor   = assets.filter(function(a){return a.type==='floorplan';});
-  var tour    = assets.filter(function(a){return a.type==='3dtour';});
+  var mlsPhotos    = assets.filter(function(a){return a.type==='mls_photos';});
+  var printPhotos  = assets.filter(function(a){return a.type==='print_photos';});
+  var finishedVids = assets.filter(function(a){return a.type==='finished_video';});
+  var socialVids   = assets.filter(function(a){return a.type==='social_video';});
 
-  // Photos tab
-  var photosPane = document.getElementById('dl-photos');
-  if (photosPane) {
-    if (photos.length) {
-      photosPane.innerHTML = photos.map(function(a){
-        return '<div class="px-media-card"><div class="px-media-icon">📁</div>' +
+  // MLS Photos tab
+  var mlsPane = document.getElementById('dl-mls-photos');
+  if (mlsPane) {
+    if (mlsPhotos.length) {
+      mlsPane.innerHTML = mlsPhotos.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">📷</div>' +
           '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
-          '<div class="px-media-desc">' + (a.description||'Full Resolution · Google Drive') + '</div></div>' +
+          '<div class="px-media-desc">' + (a.description||'Web-optimized for MLS') + '</div></div>' +
           '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download All</a></div>';
       }).join('');
     } else {
-      photosPane.innerHTML = pxAssetPending('Photos haven\'t been uploaded yet. Check back after your shoot.');
+      mlsPane.innerHTML = pxAssetPending('MLS photos haven\'t been uploaded yet. Check back after your shoot.');
     }
   }
 
-  // Videos tab
-  var videosPane = document.getElementById('dl-videos');
-  if (videosPane) {
-    var allVideos = videos.concat(reels).concat(floor).concat(tour);
-    if (allVideos.length) {
-      var icons = {video:'🎬', reel:'📱', floorplan:'📐', '3dtour':'🏠'};
-      videosPane.innerHTML = allVideos.map(function(a){
-        return '<div class="px-media-card"><div class="px-media-icon">' + (icons[a.type]||'🎬') + '</div>' +
+  // Print Size Photos tab
+  var printPane = document.getElementById('dl-print-photos');
+  if (printPane) {
+    if (printPhotos.length) {
+      printPane.innerHTML = printPhotos.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">🖼️</div>' +
           '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
-          '<div class="px-media-desc">' + (a.description||'Vimeo · Full Quality') + '</div></div>' +
+          '<div class="px-media-desc">' + (a.description||'Full resolution for print') + '</div></div>' +
+          '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download All</a></div>';
+      }).join('');
+    } else {
+      printPane.innerHTML = pxAssetPending('Print size photos haven\'t been uploaded yet. Check back after your shoot.');
+    }
+  }
+
+  // Finished Videos tab
+  var finishedPane = document.getElementById('dl-finished-videos');
+  if (finishedPane) {
+    if (finishedVids.length) {
+      finishedPane.innerHTML = finishedVids.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">🎬</div>' +
+          '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
+          '<div class="px-media-desc">' + (a.description||'4K · Final Edit') + '</div></div>' +
           '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download</a></div>';
       }).join('');
     } else {
-      videosPane.innerHTML = pxAssetPending('Videos are being edited. Usually ready within 48–72 hours of your shoot.');
+      finishedPane.innerHTML = pxAssetPending('Finished videos are being edited. Usually ready within 48–72 hours.');
     }
   }
 
-  // Raw tab
-  var rawPane = document.getElementById('dl-raw');
-  if (rawPane) {
-    if (raw.length) {
-      rawPane.innerHTML = raw.map(function(a){
-        return '<div class="px-media-card"><div class="px-media-icon">📂</div>' +
+  // Social Media Uncut Videos tab
+  var socialPane = document.getElementById('dl-social-videos');
+  if (socialPane) {
+    if (socialVids.length) {
+      socialPane.innerHTML = socialVids.map(function(a){
+        return '<div class="px-media-card"><div class="px-media-icon">📱</div>' +
           '<div class="px-media-info"><div class="px-media-title">' + a.label + '</div>' +
-          '<div class="px-media-desc">' + (a.description||'Raw footage · Google Drive') + '</div></div>' +
+          '<div class="px-media-desc">' + (a.description||'Raw social clips · Vertical & Horizontal') + '</div></div>' +
           '<a href="' + a.url + '" target="_blank" class="px-dl-btn">⬇ Download All</a></div>';
       }).join('');
     } else {
-      rawPane.innerHTML = pxAssetPending('Raw footage will be available here if included in your package.');
+      socialPane.innerHTML = pxAssetPending('Social media clips will be available here after editing.');
     }
   }
 }
