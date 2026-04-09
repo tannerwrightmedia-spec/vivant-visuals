@@ -1606,48 +1606,24 @@ async function supaSignOut(token) {
 
 // ── PORTAL LOGIN ─────────────────────────────────────────────
 async function portalSignIn() {
-  var email = document.getElementById('loginEmail').value.trim();
-  var password = document.getElementById('loginPw').value.trim();
   var btn = document.querySelector('.px-signin-btn');
-
-  if (!email || !password) { pxLoginError('Please enter your email and password.'); return; }
-
   btn.textContent = 'Signing in…';
   btn.disabled = true;
 
-  try {
-    var data = await supaAuth(email, password);
+  // Demo mode — skip auth, load demo agent data
+  currentAgent = {name: 'Demo Agent', email: 'demo@vivantvisuals.com', brokerage: 'Vivant Realty'};
+  currentListings = [
+    {id: 'demo-1', address: '1234 Sunset Blvd', city: 'Los Angeles', state: 'CA', status: 'delivered', delivered_at: '2026-04-01', photo_count: 42, video_count: 2},
+    {id: 'demo-2', address: '567 Ocean Ave', city: 'Santa Monica', state: 'CA', status: 'scheduled', delivered_at: '2026-04-15', photo_count: 0, video_count: 0},
+    {id: 'demo-3', address: '890 Hilltop Dr', city: 'Malibu', state: 'CA', status: 'delivered', delivered_at: '2026-03-20', photo_count: 38, video_count: 2}
+  ];
 
-    if (data.error || !data.access_token) {
-      btn.textContent = 'Sign In →';
-      btn.disabled = false;
-      pxLoginError(data.error_description || 'Invalid email or password.');
-      return;
-    }
+  go('portal-dash');
+  pxRenderDashboard();
+  pxScreen('overview', 'Overview', 'Your Media Library');
 
-    currentSession = data;
-    supaHeaders['Authorization'] = 'Bearer ' + data.access_token;
-
-    // Load agent profile
-    var agents = await supaFetch('/rest/v1/agents?id=eq.' + data.user.id + '&select=*');
-    currentAgent = agents[0] || {name: email.split('@')[0], email: email, brokerage: ''};
-
-    // Load listings
-    var listings = await supaFetch('/rest/v1/listings?agent_id=eq.' + data.user.id + '&select=*&order=delivered_at.desc');
-    currentListings = listings || [];
-
-    go('portal-dash');
-    pxRenderDashboard();
-    pxScreen('overview', 'Overview', 'Your Media Library');
-
-    btn.textContent = 'Sign In →';
-    btn.disabled = false;
-
-  } catch(e) {
-    btn.textContent = 'Sign In →';
-    btn.disabled = false;
-    pxLoginError('Something went wrong. Please try again.');
-  }
+  btn.textContent = 'Sign In →';
+  btn.disabled = false;
 }
 
 function pxLoginError(msg) {
