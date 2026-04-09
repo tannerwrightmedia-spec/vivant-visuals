@@ -1162,41 +1162,115 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
 
         <!-- OVERVIEW SCREEN -->
         <div class="px-screen active" id="px-overview">
-          <div class="px-stats">
-            <div class="px-stat"><div class="px-stat-num">3</div><div class="px-stat-lbl">Total Listings</div></div>
-            <div class="px-stat"><div class="px-stat-num">84</div><div class="px-stat-lbl">Total Photos</div></div>
-            <div class="px-stat"><div class="px-stat-num">6</div><div class="px-stat-lbl">Total Videos</div></div>
-            <div class="px-stat"><div class="px-stat-num">2</div><div class="px-stat-lbl">Active Listings</div></div>
+
+          <!-- Action Items -->
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">What's Next</div>
+          <div id="ov-actions" style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;">
+            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(100,220,100,0.1);border:1px solid rgba(100,220,100,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📸</div>
+              <div style="flex:1;">
+                <div style="font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:3px;">Post Day 5: Feature Highlight for 1234 Sunset Blvd</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">You haven't posted about this listing in 4 days. Kitchen photos perform great on Instagram.</div>
+              </div>
+              <button class="cal-action-btn primary" onclick="calGenerateCopy('instagram','1234 Sunset Blvd','Feature Highlight — Kitchen')" style="flex-shrink:0;">Generate Copy</button>
+            </div>
+            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(80,160,255,0.1);border:1px solid rgba(80,160,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🔗</div>
+              <div style="flex:1;">
+                <div style="font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:3px;">Share your trackable links for 567 Ocean Ave</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">Your links are ready — copy and add them to your social posts and bio.</div>
+              </div>
+              <button class="cal-action-btn" onclick="pxScreen('links','Share Links','Trackable Links & QR Codes')" style="flex-shrink:0;">View Links</button>
+            </div>
+            <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(180,100,255,0.1);border:1px solid rgba(180,100,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🎬</div>
+              <div style="flex:1;">
+                <div style="font-size:0.88rem;color:var(--white);font-weight:500;margin-bottom:3px;">New media ready for 890 Hilltop Dr</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">38 photos and 2 finished videos have been delivered.</div>
+              </div>
+              <button class="cal-action-btn" onclick="pxOpenListing('demo-3')" style="flex-shrink:0;">View Media</button>
+            </div>
           </div>
-          <div class="px-section-head">
-            <div class="px-section-title">Recent Listings</div>
+
+          <!-- Quick Stats -->
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">This Week</div>
+          <div class="px-stats" style="margin-bottom:32px;">
+            <div class="px-stat"><div class="px-stat-num">247</div><div class="px-stat-lbl">Total Views</div><div style="font-size:0.7rem;color:rgba(100,220,100,0.5);margin-top:4px;">↑ 18% from last week</div></div>
+            <div class="px-stat"><div class="px-stat-num">89</div><div class="px-stat-lbl">Link Clicks</div><div style="font-size:0.7rem;color:rgba(100,220,100,0.5);margin-top:4px;">↑ 24% from last week</div></div>
+            <div class="px-stat"><div class="px-stat-num">34</div><div class="px-stat-lbl">QR Scans</div><div style="font-size:0.7rem;color:rgba(100,220,100,0.5);margin-top:4px;">↑ 8% from last week</div></div>
+            <div class="px-stat"><div class="px-stat-num">3</div><div class="px-stat-lbl">Active Listings</div></div>
           </div>
-          <table class="px-listing-table">
-            <thead><tr><th>Property</th><th>Delivered</th><th>Assets</th><th>Status</th><th></th></tr></thead>
-            <tbody>
-              <tr onclick="pxOpenListing()">
-                <td><div class="px-listing-addr">142 Maple Ridge Dr.</div><div class="px-listing-pkg">Full Bundle</div></td>
-                <td><div class="px-listing-date">Mar 18, 2026</div></td>
-                <td><div class="px-listing-assets"><span class="px-asset-tag">28 Photos</span><span class="px-asset-tag">2 Videos</span><span class="px-asset-tag">Floor Plan</span><span class="px-asset-tag">3D Tour</span></div></td>
-                <td><span class="px-status-tag px-status-active">Active</span></td>
-                <td class="px-table-arrow">›</td>
-              </tr>
-              <tr onclick="pxOpenListing()">
-                <td><div class="px-listing-addr">87 Clearwater Blvd.</div><div class="px-listing-pkg">Full Bundle</div></td>
-                <td><div class="px-listing-date">Feb 28, 2026</div></td>
-                <td><div class="px-listing-assets"><span class="px-asset-tag">32 Photos</span><span class="px-asset-tag">2 Videos</span><span class="px-asset-tag">Floor Plan</span></div></td>
-                <td><span class="px-status-tag px-status-active">Active</span></td>
-                <td class="px-table-arrow">›</td>
-              </tr>
-              <tr onclick="pxOpenListing()">
-                <td><div class="px-listing-addr">304 Elmwood Court</div><div class="px-listing-pkg">Full Bundle</div></td>
-                <td><div class="px-listing-date">Jan 14, 2026</div></td>
-                <td><div class="px-listing-assets"><span class="px-asset-tag">24 Photos</span><span class="px-asset-tag">2 Videos</span></div></td>
-                <td><span class="px-status-tag px-status-sold">Sold</span></td>
-                <td class="px-table-arrow">›</td>
-              </tr>
-            </tbody>
-          </table>
+
+          <!-- Active Listings -->
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">Your Listings</div>
+          <div id="ov-listings" style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;">
+            <div onclick="pxOpenListing('demo-1')" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor=''">
+              <div style="flex:1;">
+                <div style="font-size:0.92rem;color:var(--white);font-weight:500;">1234 Sunset Blvd</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:3px;">Los Angeles · 42 photos · 2 videos</div>
+              </div>
+              <span class="px-status-tag px-status-active">Active</span>
+              <div style="color:rgba(255,255,255,0.15);font-size:1.2rem;">›</div>
+            </div>
+            <div onclick="pxOpenListing('demo-2')" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor=''">
+              <div style="flex:1;">
+                <div style="font-size:0.92rem;color:var(--white);font-weight:500;">567 Ocean Ave</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:3px;">Santa Monica · Scheduled</div>
+              </div>
+              <span class="px-status-tag px-status-active">Active</span>
+              <div style="color:rgba(255,255,255,0.15);font-size:1.2rem;">›</div>
+            </div>
+            <div onclick="pxOpenListing('demo-3')" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor=''">
+              <div style="flex:1;">
+                <div style="font-size:0.92rem;color:var(--white);font-weight:500;">890 Hilltop Dr</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:3px;">Malibu · 38 photos · 2 videos</div>
+              </div>
+              <span class="px-status-tag px-status-sold">Sold</span>
+              <div style="color:rgba(255,255,255,0.15);font-size:1.2rem;">›</div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">Recent Activity</div>
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div style="width:6px;height:6px;border-radius:50%;background:rgba(100,220,100,0.5);margin-top:6px;flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">Your 1234 Sunset Blvd Instagram link was clicked <strong style="color:var(--white);">12 times</strong> today</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:4px;">2 hours ago</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div style="width:6px;height:6px;border-radius:50%;background:rgba(80,160,255,0.5);margin-top:6px;flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">New photos delivered for <strong style="color:var(--white);">890 Hilltop Dr</strong></div><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:4px;">Yesterday</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,200,80,0.5);margin-top:6px;flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">QR code for 567 Ocean Ave scanned <strong style="color:var(--white);">8 times</strong> at open house</div><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:4px;">2 days ago</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div style="width:6px;height:6px;border-radius:50%;background:rgba(180,100,255,0.5);margin-top:6px;flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">Finished videos uploaded for <strong style="color:var(--white);">1234 Sunset Blvd</strong></div><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:4px;">3 days ago</div></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;">
+              <div style="width:6px;height:6px;border-radius:50%;background:rgba(100,220,100,0.5);margin-top:6px;flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">Your Facebook post for 890 Hilltop Dr reached <strong style="color:var(--white);">340 people</strong></div><div style="font-size:0.7rem;color:rgba(255,255,255,0.2);margin-top:4px;">4 days ago</div></div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:32px 0 12px;">Quick Actions</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+            <div onclick="pxScreen('ai','AI Writer','Generate Listing Copy')" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:20px 16px;text-align:center;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor=''">
+              <div style="font-size:1.4rem;margin-bottom:8px;">✨</div>
+              <div style="font-size:0.78rem;color:var(--white);font-weight:500;">Generate Copy</div>
+            </div>
+            <div onclick="pxScreen('calendar','Content Calendar','Your Posting Schedule')" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:20px 16px;text-align:center;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor=''">
+              <div style="font-size:1.4rem;margin-bottom:8px;">📅</div>
+              <div style="font-size:0.78rem;color:var(--white);font-weight:500;">Content Calendar</div>
+            </div>
+            <div onclick="pxScreen('links','Share Links','Trackable Links & QR Codes')" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:20px 16px;text-align:center;cursor:pointer;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor=''">
+              <div style="font-size:1.4rem;margin-bottom:8px;">🔗</div>
+              <div style="font-size:0.78rem;color:var(--white);font-weight:500;">Share Links</div>
+            </div>
+          </div>
         </div>
 
         <!-- LISTINGS SCREEN -->
