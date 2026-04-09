@@ -1550,9 +1550,9 @@ async function portalSignIn() {
   // Demo mode — skip auth, load demo agent data
   currentAgent = {name: 'Demo Agent', email: 'demo@vivantvisuals.com', brokerage: 'Vivant Realty'};
   currentListings = [
-    {id: 'demo-1', address: '1234 Sunset Blvd', city: 'Los Angeles', state: 'CA', status: 'delivered', delivered_at: '2026-04-01', photo_count: 42, video_count: 2},
-    {id: 'demo-2', address: '567 Ocean Ave', city: 'Santa Monica', state: 'CA', status: 'scheduled', delivered_at: '2026-04-15', photo_count: 0, video_count: 0},
-    {id: 'demo-3', address: '890 Hilltop Dr', city: 'Malibu', state: 'CA', status: 'delivered', delivered_at: '2026-03-20', photo_count: 38, video_count: 2}
+    {id: 'demo-1', address: '1234 Sunset Blvd', city: 'Los Angeles', state: 'CA', status: 'active', package: 'Full Bundle', delivered_at: '2026-04-01', photo_count: 42, video_count: 2},
+    {id: 'demo-2', address: '567 Ocean Ave', city: 'Santa Monica', state: 'CA', status: 'active', package: 'Full Bundle', delivered_at: '2026-04-15', photo_count: 0, video_count: 0},
+    {id: 'demo-3', address: '890 Hilltop Dr', city: 'Malibu', state: 'CA', status: 'sold', package: 'Full Bundle', delivered_at: '2026-03-20', photo_count: 38, video_count: 2}
   ];
 
   go('portal-dash');
@@ -1645,13 +1645,24 @@ async function pxOpenListing(listingId) {
   var statusLabel = listing.status === 'active' ? 'Active' : 'Sold';
 
   document.querySelector('.px-detail-addr').textContent = listing.address;
-  document.querySelector('.px-detail-meta').textContent = listing.package + ' · Delivered ' + date + ' · ' + statusLabel;
+  document.querySelector('.px-detail-meta').textContent = (listing.package||'Full Bundle') + ' · Delivered ' + date + ' · ' + statusLabel;
 
-  // Load assets for this listing
-  var assets = await supaFetch('/rest/v1/assets?listing_id=eq.' + listing.id + '&select=*');
-  pxRenderAssets(assets || []);
+  // Load assets — use empty array in demo mode (no Supabase session)
+  var assets = [];
+  if (currentSession && currentSession.access_token) {
+    try { assets = await supaFetch('/rest/v1/assets?listing_id=eq.' + listing.id + '&select=*') || []; } catch(e) { assets = []; }
+  }
+  pxRenderAssets(assets);
 
-  pxScreen('listing-detail', listing.address, listing.package + ' · ' + statusLabel);
+  // Reset to first tab
+  document.querySelectorAll('#px-listing-detail .px-tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('#px-listing-detail .px-tab').forEach(function(t){t.classList.remove('active');});
+  var firstPane = document.getElementById('dl-mls-photos');
+  if (firstPane) firstPane.classList.add('active');
+  var firstTab = document.querySelector('#px-listing-detail .px-tab');
+  if (firstTab) firstTab.classList.add('active');
+
+  pxScreen('listing-detail', listing.address, (listing.package||'Full Bundle') + ' · ' + statusLabel);
 }
 
 function pxRenderAssets(assets) {
