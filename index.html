@@ -1026,6 +1026,11 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
   .px-dash{flex-direction:column;}
   .px-sidebar-agent{display:none;}
 }
+
+/* AI Writer buttons */
+.ai-type-btn,.ai-tone-btn{background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:9px 16px;color:rgba(255,255,255,0.4);font-family:'Inter',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
+.ai-type-btn:hover,.ai-tone-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--white);}
+.ai-type-btn.active,.ai-tone-btn.active{border-color:rgba(255,255,255,0.4);color:var(--white);background:rgba(255,255,255,0.08);}
 </style>
 
 <!-- ════════════════ PORTAL LOGIN ════════════════ -->
@@ -1094,6 +1099,13 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
           <div class="px-nav-item" id="nav-links" onclick="pxScreen('links','Share Links','Trackable Links & QR Codes')">
             <div class="px-nav-icon">🔗</div>
             <span class="px-nav-text">Share Links</span>
+          </div>
+        </div>
+        <div class="px-nav-section" style="margin-top:20px;">
+          <div class="px-nav-label">AI Tools</div>
+          <div class="px-nav-item" id="nav-ai" onclick="pxScreen('ai','AI Writer','Generate Listing Copy')">
+            <div class="px-nav-icon">✨</div>
+            <span class="px-nav-text">AI Writer</span>
           </div>
         </div>
         <div class="px-nav-section" style="margin-top:20px;">
@@ -1320,6 +1332,56 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
                   <div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">QR Code</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">For print — flyers, signs, open houses</div></div>
                   <button style="background:var(--white);color:var(--black);border:none;padding:7px 14px;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Download</button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI WRITER SCREEN -->
+        <div class="px-screen" id="px-ai">
+          <div style="max-width:680px;">
+            <!-- Type selector -->
+            <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">What do you need?</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+              <button class="ai-type-btn active" onclick="aiSelectType('mls',this)">MLS Description</button>
+              <button class="ai-type-btn" onclick="aiSelectType('instagram',this)">Instagram Caption</button>
+              <button class="ai-type-btn" onclick="aiSelectType('facebook',this)">Facebook Post</button>
+              <button class="ai-type-btn" onclick="aiSelectType('tiktok',this)">TikTok Caption</button>
+              <button class="ai-type-btn" onclick="aiSelectType('email',this)">Email Blast</button>
+              <button class="ai-type-btn" onclick="aiSelectType('openhouse',this)">Open House Invite</button>
+            </div>
+
+            <!-- Listing selector -->
+            <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px;">Select Listing</div>
+            <select id="aiListing" style="width:100%;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.87rem;outline:none;margin-bottom:20px;appearance:none;-webkit-appearance:none;">
+              <option value="1234 Sunset Blvd, Los Angeles">1234 Sunset Blvd, Los Angeles</option>
+              <option value="567 Ocean Ave, Santa Monica">567 Ocean Ave, Santa Monica</option>
+              <option value="890 Hilltop Dr, Malibu">890 Hilltop Dr, Malibu</option>
+            </select>
+
+            <!-- Property details -->
+            <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px;">Property Details (optional — helps generate better copy)</div>
+            <textarea id="aiDetails" placeholder="e.g. 4 bed / 3 bath, 2,800 sqft, pool, recently renovated kitchen, ocean views, open floor plan..." style="width:100%;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:14px 16px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.87rem;resize:vertical;min-height:90px;outline:none;margin-bottom:20px;"></textarea>
+
+            <!-- Tone -->
+            <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px;">Tone</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+              <button class="ai-tone-btn active" onclick="aiSelectTone('professional',this)">Professional</button>
+              <button class="ai-tone-btn" onclick="aiSelectTone('luxury',this)">Luxury</button>
+              <button class="ai-tone-btn" onclick="aiSelectTone('casual',this)">Casual</button>
+              <button class="ai-tone-btn" onclick="aiSelectTone('excited',this)">Excited</button>
+            </div>
+
+            <!-- Generate button -->
+            <button id="aiGenBtn" onclick="aiGenerate()" style="width:100%;background:var(--white);color:var(--black);padding:15px;border-radius:4px;font-weight:700;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:background 0.2s;margin-bottom:24px;">Generate</button>
+
+            <!-- Output -->
+            <div id="aiOutput" style="display:none;">
+              <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:10px;">Generated Copy</div>
+              <div id="aiResult" style="background:var(--black2);border:1px solid var(--border);border-radius:10px;padding:24px;color:rgba(255,255,255,0.85);font-size:0.92rem;line-height:1.8;white-space:pre-wrap;margin-bottom:14px;"></div>
+              <div style="display:flex;gap:10px;">
+                <button onclick="aiCopy()" style="flex:1;background:var(--white);color:var(--black);padding:12px;border-radius:4px;font-weight:700;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;">Copy to Clipboard</button>
+                <button onclick="aiGenerate()" style="flex:1;background:transparent;border:1px solid var(--border);color:rgba(255,255,255,0.5);padding:12px;border-radius:4px;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Regenerate</button>
               </div>
             </div>
           </div>
@@ -1845,6 +1907,93 @@ function copyLink(text,btn){
     btn.textContent='Copied!';
     setTimeout(function(){btn.textContent='Copy';},1500);
   });
+}
+
+// ── AI WRITER ────────────────────────────────────────────────
+var aiType = 'mls';
+var aiTone = 'professional';
+
+function aiSelectType(type,btn){
+  aiType=type;
+  document.querySelectorAll('.ai-type-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+function aiSelectTone(tone,btn){
+  aiTone=tone;
+  document.querySelectorAll('.ai-tone-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+
+function aiGenerate(){
+  var listing=document.getElementById('aiListing').value;
+  var details=document.getElementById('aiDetails').value.trim();
+  var btn=document.getElementById('aiGenBtn');
+  btn.textContent='Generating…';
+  btn.disabled=true;
+
+  // Demo: generate copy locally (replace with API call to Claude later)
+  setTimeout(function(){
+    var result=aiDemoGenerate(aiType,aiTone,listing,details);
+    document.getElementById('aiResult').textContent=result;
+    document.getElementById('aiOutput').style.display='block';
+    btn.textContent='Generate';
+    btn.disabled=false;
+  },1200);
+}
+
+function aiCopy(){
+  var text=document.getElementById('aiResult').textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    var btn=event.target;
+    btn.textContent='Copied!';
+    setTimeout(function(){btn.textContent='Copy to Clipboard';},1500);
+  });
+}
+
+function aiDemoGenerate(type,tone,listing,details){
+  var addr=listing.split(',')[0];
+  var d=details||'stunning property with premium finishes';
+
+  var templates={
+    mls:{
+      professional:'Welcome to '+addr+'. This beautifully appointed residence features '+d+'. Every detail has been thoughtfully considered, from the moment you step through the front door to the expansive outdoor living spaces. Perfectly positioned in one of the area\'s most desirable neighborhoods, this home offers the ideal blend of comfort, style, and convenience. Schedule your private showing today.',
+      luxury:'A rare offering at '+addr+'. This exceptional estate presents '+d+' — a masterful blend of architectural distinction and refined living. Meticulously curated interiors flow seamlessly into resort-style grounds. For the discerning buyer who accepts nothing less than extraordinary.',
+      casual:'Check out '+addr+'! This one\'s got it all — '+d+'. Seriously, you need to see this place in person. The layout flows perfectly and the neighborhood is amazing. Won\'t last long — reach out to schedule a tour!',
+      excited:'JUST LISTED! '+addr+' is officially on the market and it is STUNNING! Featuring '+d+' — this home is an absolute showstopper! You do NOT want to miss this one. Call today before it\'s gone!'
+    },
+    instagram:{
+      professional:'Just listed: '+addr+'\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'. Every detail designed with intention.\n\nDM for details or link in bio for the full tour.\n\n#JustListed #RealEstate #LuxuryListing #NewListing #HomeForSale',
+      luxury:'Introducing '+addr+' ✦\n\nWhere refined living meets architectural excellence. '+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nPrivate showings now available.\n\n#LuxuryRealEstate #MillionDollarListing #LuxuryHome #DreamHome',
+      casual:'New listing alert 🏡\n\n'+addr+' just hit the market and honestly, this one\'s special. '+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nHit me up for a showing!\n\n#JustListed #HomeForSale #RealEstate #NewOnMarket',
+      excited:'JUST LISTED 🔥🔥🔥\n\n'+addr+' is HERE and I am obsessed!\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'\n\nThis one is going to go FAST — DM me NOW!\n\n#JustListed #RealEstate #MustSee #DreamHome'
+    },
+    facebook:{
+      professional:'New Listing | '+addr+'\n\nI\'m excited to bring this beautiful property to market. '+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nThis home checks every box — reach out for pricing, details, or to schedule a private tour. Link to the full property website in the comments.',
+      luxury:'Now Available | '+addr+'\n\nThis extraordinary residence offers '+d+'. A rare opportunity in one of the most coveted locations in the area.\n\nContact me for a private showing.',
+      casual:'Hey everyone! Just listed this beauty at '+addr+' 🏡\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'. Honestly one of my favorite listings right now.\n\nKnow someone looking? Tag them below! Or message me for details.',
+      excited:'IT\'S LIVE!! 🎉\n\n'+addr+' is officially on the market and WOW — this home blew me away!\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'\n\nDM me, call me, comment below — whatever you gotta do, just don\'t miss this one!'
+    },
+    tiktok:{
+      professional:'POV: You just walked into '+addr+' 🏠\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nLink in bio for the full tour.\n\n#realestate #justlisted #housetour #listing',
+      luxury:'This is what luxury looks like at '+addr+' ✦\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\n#luxuryrealestate #milliondollarlisting #dreamhome #housetour',
+      casual:'wait til you see this house 😍\n\n'+addr+' just listed and I\'m still thinking about that kitchen\n\n'+d+'\n\n#realestate #housetour #justlisted',
+      excited:'NO WAY this house is real 🤯🤯\n\n'+addr+' JUST HIT THE MARKET\n\n'+d+'\n\nI literally can\'t 🔥\n\n#realestate #justlisted #viral #housetour #dreamhome'
+    },
+    email:{
+      professional:'Subject: Just Listed — '+addr+'\n\nHi [Name],\n\nI wanted to personally share one of my newest listings with you — '+addr+'.\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nI\'d love to arrange a private showing at your convenience. You can view the full property website here: [link]\n\nBest regards,\n[Your Name]',
+      luxury:'Subject: An Exclusive Offering — '+addr+'\n\nDear [Name],\n\nI\'m pleased to present an exceptional new listing at '+addr+'.\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'. This residence represents a rare opportunity for the most discerning buyer.\n\nI would welcome the opportunity to arrange a private viewing.\n\nWarm regards,\n[Your Name]',
+      casual:'Subject: You\'re gonna love this one — '+addr+'\n\nHey [Name]!\n\nJust listed a great one at '+addr+' and immediately thought of you.\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'. Honestly, it\'s one of my favorites right now.\n\nLet me know if you want to check it out — happy to set up a showing anytime.\n\nTalk soon,\n[Your Name]',
+      excited:'Subject: 🏡 JUST LISTED — '+addr+'!\n\nHi [Name]!\n\nI am SO excited to share this one — '+addr+' just hit the market!\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nThis one is going to move fast — let\'s get you in for a showing ASAP!\n\n[Your Name]'
+    },
+    openhouse:{
+      professional:'You\'re Invited\n\nOpen House at '+addr+'\n\nJoin us this [Day], [Date] from [Time] to [Time] for an exclusive open house.\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nRefreshments will be provided. We look forward to seeing you there.\n\nRSVP: [Your Contact Info]',
+      luxury:'You Are Cordially Invited\n\nA Private Open House\n'+addr+'\n\n[Day], [Date] | [Time] – [Time]\n\n'+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nKindly RSVP to confirm your attendance.\n\n[Your Name] | [Phone]',
+      casual:'Open House this weekend! 🏡\n\n'+addr+'\n[Day], [Date] | [Time] – [Time]\n\nCome check it out! '+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nNo appointment needed — just stop by. See you there!\n\n[Your Name]',
+      excited:'OPEN HOUSE ALERT!! 🎉🏡\n\n'+addr+'\n[Day], [Date] | [Time] – [Time]\n\nYou HAVE to come see this one in person! '+d.charAt(0).toUpperCase()+d.slice(1)+'.\n\nBring your friends, bring your family — everyone is welcome!\n\nSee you there!'
+    }
+  };
+
+  return (templates[type]&&templates[type][tone])||templates.mls.professional;
 }
 
 function pxTab(id,el){
