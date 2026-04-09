@@ -1028,6 +1028,31 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
 }
 
 /* AI Writer buttons */
+/* Content Calendar */
+.cal-day{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.06);}
+.cal-day:last-child{border-bottom:none;}
+.cal-day-marker{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:52px;}
+.cal-day-num{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--white);font-weight:700;line-height:1;}
+.cal-day-label{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-top:4px;}
+.cal-dot{width:8px;height:8px;border-radius:50%;margin-top:8px;}
+.cal-dot.green{background:rgba(100,220,100,0.5);}
+.cal-dot.yellow{background:rgba(220,200,80,0.5);}
+.cal-dot.blue{background:rgba(80,160,255,0.5);}
+.cal-dot.purple{background:rgba(180,100,255,0.5);}
+.cal-dot.pink{background:rgba(255,100,150,0.5);}
+.cal-day-content{flex:1;}
+.cal-post{background:var(--black2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin-bottom:8px;transition:border-color 0.2s;}
+.cal-post:last-child{margin-bottom:0;}
+.cal-post:hover{border-color:rgba(255,255,255,0.15);}
+.cal-post-platform{font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+.cal-post-title{font-size:0.9rem;color:var(--white);margin-bottom:4px;font-weight:500;}
+.cal-post-desc{font-size:0.78rem;color:rgba(255,255,255,0.35);line-height:1.5;}
+.cal-post-actions{display:flex;gap:8px;margin-top:10px;}
+.cal-action-btn{background:transparent;border:1px solid var(--border);color:rgba(255,255,255,0.35);padding:5px 12px;border-radius:4px;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;}
+.cal-action-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--white);}
+.cal-action-btn.primary{background:var(--white);color:var(--black);border-color:var(--white);}
+.cal-action-btn.primary:hover{background:var(--lgray);}
+
 .ai-type-btn,.ai-tone-btn{background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:9px 16px;color:rgba(255,255,255,0.4);font-family:'Inter',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
 .ai-type-btn:hover,.ai-tone-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--white);}
 .ai-type-btn.active,.ai-tone-btn.active{border-color:rgba(255,255,255,0.4);color:var(--white);background:rgba(255,255,255,0.08);}
@@ -1106,6 +1131,10 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
           <div class="px-nav-item" id="nav-ai" onclick="pxScreen('ai','AI Writer','Generate Listing Copy')">
             <div class="px-nav-icon">✨</div>
             <span class="px-nav-text">AI Writer</span>
+          </div>
+          <div class="px-nav-item" id="nav-calendar" onclick="pxScreen('calendar','Content Calendar','Your Posting Schedule')">
+            <div class="px-nav-icon">📅</div>
+            <span class="px-nav-text">Content Calendar</span>
           </div>
         </div>
         <div class="px-nav-section" style="margin-top:20px;">
@@ -1384,6 +1413,22 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
                 <button onclick="aiGenerate()" style="flex:1;background:transparent;border:1px solid var(--border);color:rgba(255,255,255,0.5);padding:12px;border-radius:4px;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Regenerate</button>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- CONTENT CALENDAR SCREEN -->
+        <div class="px-screen" id="px-calendar">
+          <div style="max-width:720px;">
+            <!-- Listing selector -->
+            <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:8px;">Select Listing</div>
+            <select id="calListing" onchange="calRender()" style="width:100%;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--white);font-family:'Inter',sans-serif;font-size:0.87rem;outline:none;margin-bottom:24px;appearance:none;-webkit-appearance:none;">
+              <option value="1234 Sunset Blvd">1234 Sunset Blvd</option>
+              <option value="567 Ocean Ave">567 Ocean Ave</option>
+              <option value="890 Hilltop Dr">890 Hilltop Dr</option>
+            </select>
+
+            <!-- Timeline -->
+            <div id="calTimeline" style="display:flex;flex-direction:column;gap:0;"></div>
           </div>
         </div>
 
@@ -1995,6 +2040,119 @@ function aiDemoGenerate(type,tone,listing,details){
 
   return (templates[type]&&templates[type][tone])||templates.mls.professional;
 }
+
+// ── CONTENT CALENDAR ─────────────────────────────────────────
+var calendarPlan = [
+  {day:1, label:'Day 1', color:'green', posts:[
+    {platform:'Instagram Story', title:'Coming Soon Teaser', desc:'Post a single hero photo with "Coming Soon" text overlay. Build anticipation before the listing goes live.', action:'instagram'},
+    {platform:'Facebook', title:'Coming Soon Announcement', desc:'Share the hero photo with a short teaser: "Something special is coming to [neighborhood]..."', action:'facebook'}
+  ]},
+  {day:3, label:'Day 3', color:'blue', posts:[
+    {platform:'Instagram Feed', title:'Just Listed — Carousel Post', desc:'Post 5-8 best photos as a carousel. Use the MLS description as caption. Include location tag and hashtags.', action:'instagram'},
+    {platform:'Facebook', title:'Just Listed — Full Post', desc:'Share the property website link with all key details: beds, baths, sqft, price, and standout features.', action:'facebook'},
+    {platform:'TikTok / Reels', title:'Listing Video Drop', desc:'Post the finished listing video. Hook in first 2 seconds. Use trending audio if appropriate.', action:'tiktok'}
+  ]},
+  {day:5, label:'Day 5', color:'purple', posts:[
+    {platform:'Instagram Story', title:'Feature Highlight — Kitchen', desc:'Post 2-3 kitchen photos with detail callouts. Use polls or question stickers to drive engagement.', action:'instagram'},
+    {platform:'TikTok / Reels', title:'Room-by-Room Walkthrough', desc:'Quick 15-30s clip walking through standout rooms. Text overlay with key features.', action:'tiktok'}
+  ]},
+  {day:7, label:'Day 7', color:'yellow', posts:[
+    {platform:'Instagram Feed', title:'Agent Brand Reel', desc:'Post your agent brand video. This one builds YOUR brand — position yourself as the expert in this market.', action:'instagram'},
+    {platform:'Facebook', title:'Agent Brand Share', desc:'Share the brand reel with a personal message about why you love this property and neighborhood.', action:'facebook'}
+  ]},
+  {day:9, label:'Day 9', color:'pink', posts:[
+    {platform:'Instagram Story', title:'Neighborhood Spotlight', desc:'3-5 story slides highlighting nearby restaurants, parks, schools, and lifestyle. Tag local businesses.', action:'instagram'}
+  ]},
+  {day:11, label:'Day 11', color:'green', posts:[
+    {platform:'Instagram Feed', title:'Twilight / Aerial Showcase', desc:'Post your best twilight or aerial shot. These are scroll-stoppers. Keep caption short and punchy.', action:'instagram'},
+    {platform:'Facebook', title:'Twilight Photo Feature', desc:'Share the twilight shot with a caption about evening living at the property.', action:'facebook'}
+  ]},
+  {day:14, label:'Day 14', color:'blue', posts:[
+    {platform:'Instagram Story', title:'Open House Announcement', desc:'Create a countdown sticker for the open house. Include address, date, time.', action:'instagram'},
+    {platform:'Facebook', title:'Open House Event', desc:'Create a Facebook event or post with all open house details. Invite your network.', action:'facebook'},
+    {platform:'Email', title:'Open House Email Blast', desc:'Send to your buyer list and sphere. Include property website link and 2-3 best photos.', action:'email'}
+  ]},
+  {day:21, label:'Day 21', color:'purple', posts:[
+    {platform:'Instagram Feed', title:'Social Proof / Showing Recap', desc:'Share showing activity or interest updates. "10 showings this week" builds urgency and positions you as in-demand.', action:'instagram'},
+    {platform:'TikTok / Reels', title:'Behind the Scenes', desc:'Quick clip of you prepping for a showing or reviewing offers. Humanizes your brand.', action:'tiktok'}
+  ]},
+  {day:30, label:'Day 30', color:'yellow', posts:[
+    {platform:'Instagram Feed', title:'Price Improvement or Under Contract', desc:'If price reduced: reframe as opportunity. If under contract: celebrate the win and tag the milestone.', action:'instagram'},
+    {platform:'Facebook', title:'Status Update', desc:'Share the update with gratitude. Either way, position it as momentum.', action:'facebook'}
+  ]}
+];
+
+function calRender(){
+  var timeline=document.getElementById('calTimeline');
+  if(!timeline)return;
+  var listing=document.getElementById('calListing').value;
+
+  timeline.innerHTML=calendarPlan.map(function(day){
+    var postsHTML=day.posts.map(function(post){
+      return '<div class="cal-post">' +
+        '<div class="cal-post-platform">'+post.platform+'</div>' +
+        '<div class="cal-post-title">'+post.title+'</div>' +
+        '<div class="cal-post-desc">'+post.desc+'</div>' +
+        '<div class="cal-post-actions">' +
+          '<button class="cal-action-btn primary" onclick="calGenerateCopy(\''+post.action+'\',\''+listing+'\',\''+post.title+'\')">Generate Copy</button>' +
+          '<button class="cal-action-btn" onclick="calMarkDone(this)">Mark Done</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    return '<div class="cal-day">' +
+      '<div class="cal-day-marker">' +
+        '<div class="cal-day-num">'+day.day+'</div>' +
+        '<div class="cal-day-label">'+day.label+'</div>' +
+        '<div class="cal-dot '+day.color+'"></div>' +
+      '</div>' +
+      '<div class="cal-day-content">'+postsHTML+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function calGenerateCopy(platform,listing,title){
+  // Switch to AI Writer with pre-filled values
+  var typeMap={instagram:'instagram',facebook:'facebook',tiktok:'tiktok',email:'email'};
+  var type=typeMap[platform]||'instagram';
+
+  // Set AI Writer type
+  aiType=type;
+  document.querySelectorAll('.ai-type-btn').forEach(function(b){
+    b.classList.remove('active');
+    if(b.textContent.toLowerCase().indexOf(type)!==-1)b.classList.add('active');
+  });
+
+  // Set listing
+  var sel=document.getElementById('aiListing');
+  for(var i=0;i<sel.options.length;i++){
+    if(sel.options[i].value.indexOf(listing)!==-1){sel.selectedIndex=i;break;}
+  }
+
+  // Pre-fill details with the post title as context
+  document.getElementById('aiDetails').value=title+' — '+listing;
+
+  // Switch to AI Writer screen
+  pxScreen('ai','AI Writer','Generate Listing Copy');
+}
+
+function calMarkDone(btn){
+  var post=btn.closest('.cal-post');
+  if(post.style.opacity==='0.4'){
+    post.style.opacity='1';
+    btn.textContent='Mark Done';
+  } else {
+    post.style.opacity='0.4';
+    btn.textContent='Undo';
+  }
+}
+
+// Auto-render calendar when screen loads
+var _origPxScreen=pxScreen;
+pxScreen=function(id,title,sub){
+  _origPxScreen(id,title,sub);
+  if(id==='calendar')calRender();
+};
 
 function pxTab(id,el){
   document.querySelectorAll('.px-tab-pane').forEach(function(p){p.classList.remove('active');});
