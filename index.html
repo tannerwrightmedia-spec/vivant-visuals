@@ -1086,6 +1086,17 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
           <!-- Photos and Videos now live inside each listing -->
         </div>
         <div class="px-nav-section" style="margin-top:20px;">
+          <div class="px-nav-label">Analytics</div>
+          <div class="px-nav-item" id="nav-analytics" onclick="pxScreen('analytics','Analytics','Listing Performance')">
+            <div class="px-nav-icon">📊</div>
+            <span class="px-nav-text">Performance</span>
+          </div>
+          <div class="px-nav-item" id="nav-links" onclick="pxScreen('links','Share Links','Trackable Links & QR Codes')">
+            <div class="px-nav-icon">🔗</div>
+            <span class="px-nav-text">Share Links</span>
+          </div>
+        </div>
+        <div class="px-nav-section" style="margin-top:20px;">
           <div class="px-nav-label">Account</div>
           <div class="px-nav-item" onclick="window.location='vivant-visuals-booking.html'">
             <div class="px-nav-icon">📅</div>
@@ -1233,6 +1244,86 @@ footer p{color:rgba(255,255,255,0.2);font-size:0.75rem;}
         </div>
 
         <!-- Photos and Videos screens removed — media now lives inside each listing -->
+
+        <!-- ANALYTICS SCREEN -->
+        <div class="px-screen" id="px-analytics">
+          <div class="px-stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px;">
+            <div class="px-stat"><div class="px-stat-num" id="an-total-views">247</div><div class="px-stat-lbl">Total Views</div></div>
+            <div class="px-stat"><div class="px-stat-num" id="an-total-clicks">89</div><div class="px-stat-lbl">Link Clicks</div></div>
+            <div class="px-stat"><div class="px-stat-num" id="an-total-qr">34</div><div class="px-stat-lbl">QR Scans</div></div>
+          </div>
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;">Performance by Listing</div>
+          <div style="display:flex;flex-direction:column;gap:10px;" id="an-listings">
+            <div class="px-media-card">
+              <div class="px-media-icon">📊</div>
+              <div class="px-media-info">
+                <div class="px-media-title">1234 Sunset Blvd</div>
+                <div class="px-media-desc">142 views · 52 link clicks · 18 QR scans</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);font-weight:700;">142</div>
+                <div style="font-size:0.65rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">views</div>
+              </div>
+            </div>
+            <div class="px-media-card">
+              <div class="px-media-icon">📊</div>
+              <div class="px-media-info">
+                <div class="px-media-title">567 Ocean Ave</div>
+                <div class="px-media-desc">68 views · 24 link clicks · 11 QR scans</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);font-weight:700;">68</div>
+                <div style="font-size:0.65rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">views</div>
+              </div>
+            </div>
+            <div class="px-media-card">
+              <div class="px-media-icon">📊</div>
+              <div class="px-media-info">
+                <div class="px-media-title">890 Hilltop Dr</div>
+                <div class="px-media-desc">37 views · 13 link clicks · 5 QR scans</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);font-weight:700;">37</div>
+                <div style="font-size:0.65rem;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.08em;">views</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin:28px 0 14px;">Traffic by Platform</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <div class="px-stat" style="padding:20px 16px;"><div class="px-stat-num" style="font-size:1.4rem;">38%</div><div class="px-stat-lbl">Instagram</div></div>
+            <div class="px-stat" style="padding:20px 16px;"><div class="px-stat-num" style="font-size:1.4rem;">27%</div><div class="px-stat-lbl">Facebook</div></div>
+            <div class="px-stat" style="padding:20px 16px;"><div class="px-stat-num" style="font-size:1.4rem;">19%</div><div class="px-stat-lbl">Direct / QR</div></div>
+            <div class="px-stat" style="padding:20px 16px;"><div class="px-stat-num" style="font-size:1.4rem;">16%</div><div class="px-stat-lbl">Other</div></div>
+          </div>
+        </div>
+
+        <!-- SHARE LINKS SCREEN -->
+        <div class="px-screen" id="px-links">
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:14px;">Your Trackable Links</div>
+          <div style="display:flex;flex-direction:column;gap:16px;" id="links-list">
+            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:24px;">
+              <div style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--white);margin-bottom:16px;">1234 Sunset Blvd</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">
+                  <div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">Instagram</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">vvlinks.co/sunset-ig</div></div>
+                  <button style="background:var(--white);color:var(--black);border:none;padding:7px 14px;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;" onclick="copyLink('vvlinks.co/sunset-ig',this)">Copy</button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">
+                  <div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">Facebook</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">vvlinks.co/sunset-fb</div></div>
+                  <button style="background:var(--white);color:var(--black);border:none;padding:7px 14px;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;" onclick="copyLink('vvlinks.co/sunset-fb',this)">Copy</button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">
+                  <div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">TikTok</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">vvlinks.co/sunset-tt</div></div>
+                  <button style="background:var(--white);color:var(--black);border:none;padding:7px 14px;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;" onclick="copyLink('vvlinks.co/sunset-tt',this)">Copy</button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;background:var(--black2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">
+                  <div><div style="font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">QR Code</div><div style="font-size:0.82rem;color:rgba(255,255,255,0.7);">For print — flyers, signs, open houses</div></div>
+                  <button style="background:var(--white);color:var(--black);border:none;padding:7px 14px;border-radius:4px;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Download</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -1747,6 +1838,13 @@ function pxScreen(id,title,sub){
   if(navItem)navItem.classList.add('active');
   document.getElementById('pxTitle').textContent=title||'';
   document.getElementById('pxSub').textContent=sub||'';
+}
+
+function copyLink(text,btn){
+  navigator.clipboard.writeText(text).then(function(){
+    btn.textContent='Copied!';
+    setTimeout(function(){btn.textContent='Copy';},1500);
+  });
 }
 
 function pxTab(id,el){
